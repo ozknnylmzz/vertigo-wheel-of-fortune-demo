@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1d3b47ff7b04771ad5c52e67c3e2573, type: 3}
+  m_Name: round_track_top_settings
+  m_EditorClassIdentifier: 
+  shiftDurationSeconds: 0.5
+  slotTextFormat: '{0}'
+  silverRoundInterval: 5
+  goldenRoundInterval: 30
+  bronzeSlotTextColor: {r: 1, g: 1, b: 1, a: 1}
+  silverSlotTextColor: {r: 0.31568918, g: 0.8867924, b: 0, a: 1}
+  goldenSlotTextColor: {r: 1, g: 0.8509804, b: 0.3137255, a: 1}
+  silverLevelInterval: 5
+  goldenLevelInterval: 30
+  normalCurrentSlotTextColor: {r: 0, g: 0, b: 0, a: 1}
+  silverCurrentSlotTextColor: {r: 0.31764707, g: 0.8862745, b: 0, a: 1}
+  goldenCurrentSlotTextColor: {r: 1, g: 0.7812411, b: 0, a: 1}

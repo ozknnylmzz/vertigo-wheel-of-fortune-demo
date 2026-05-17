@@ -1609,6 +1609,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7716993497673348644}
+  - component: {fileID: 7150020188893664629}
   m_Layer: 5
   m_Name: 'ui_image_round_current_marker '
   m_TagString: Untagged
@@ -1638,6 +1639,20 @@ RectTransform:
   m_AnchoredPosition: {x: 1.58, y: 0}
   m_SizeDelta: {x: 81.042, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7150020188893664629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4583864861648795621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bcf64547f0e4bb58a259a71d1641ac7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ui_image_round_current_marker_bg: {fileID: 316146967590861522}
+  markerSettings: {fileID: 11400000, guid: d6afe6652109b481ea31505c2a56a662, type: 2}
 --- !u!1 &5172509210412662954
 GameObject:
   m_ObjectHideFlags: 0
@@ -1781,6 +1796,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1765303762873634697}
+  - component: {fileID: 8488253851999076021}
   m_Layer: 5
   m_Name: ui_panel_round_track_top
   m_TagString: Untagged
@@ -1811,6 +1827,52 @@ RectTransform:
   m_AnchoredPosition: {x: 22.957993, y: -13.134033}
   m_SizeDelta: {x: 1051.969, y: 140.744}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &8488253851999076021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5173138640712439955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5a52af6c87d4830a1c66f5b5dd215bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ui_container_round_slots_track: {fileID: 897142470285208460}
+  ui_round_slot_views:
+  - {fileID: 3401277320475327371}
+  - {fileID: 6129006949926756046}
+  - {fileID: 5409351676276236100}
+  - {fileID: 4261320014518574369}
+  - {fileID: 7870639318977022754}
+  - {fileID: 344768478916976316}
+  - {fileID: 335285622829061977}
+  - {fileID: 4207403194498351916}
+  - {fileID: 6100583970847321430}
+  - {fileID: 93831981195377403}
+  - {fileID: 4834170719632085873}
+  - {fileID: 2307730261038970639}
+  - {fileID: 4205544007768725025}
+  - {fileID: 2753082732727699932}
+  - {fileID: 5699456120158612234}
+  ui_round_slot_value_texts:
+  - {fileID: 5951330131792162934}
+  - {fileID: 7350876773560299128}
+  - {fileID: 5799625685314466366}
+  - {fileID: 6104652826150410869}
+  - {fileID: 7199175369006898546}
+  - {fileID: 8143635869504291568}
+  - {fileID: 6840840386804944639}
+  - {fileID: 4745505402746423670}
+  - {fileID: 2037258239066810084}
+  - {fileID: 5531425474498803365}
+  - {fileID: 8419524030890910311}
+  - {fileID: 5548870872911846600}
+  - {fileID: 4308444468312568585}
+  - {fileID: 5742640103218741477}
+  - {fileID: 8485187443313509897}
+  roundTrackTopSettings: {fileID: 11400000, guid: 368c42a2430d74ba6be41e18c28e2ab6, type: 2}
 --- !u!1 &5174760560588547625
 GameObject:
   m_ObjectHideFlags: 0

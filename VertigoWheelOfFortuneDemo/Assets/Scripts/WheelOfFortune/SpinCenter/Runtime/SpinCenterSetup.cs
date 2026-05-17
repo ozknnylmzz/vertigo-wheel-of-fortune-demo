@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Vertigo.WheelOfFortune.GameFlow.Runtime;
 using Vertigo.WheelOfFortune.SpinCenter.Data;
 using Vertigo.WheelOfFortune.SpinCenter.UI;
 #if UNITY_EDITOR
@@ -30,8 +31,24 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             ApplyCurrentSelection();
         }
 
+        private void OnEnable()
+        {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
+            WheelGameEventBus.LevelChanged += HandleLevelChanged;
+            HandleLevelChanged(WheelGameEventBus.LastKnownLevel);
+        }
+
         private void OnDisable()
         {
+            if (Application.isPlaying)
+            {
+                WheelGameEventBus.LevelChanged -= HandleLevelChanged;
+            }
+
 #if UNITY_EDITOR
             if (editorPreviewApplyQueued)
             {
@@ -90,13 +107,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             ApplyCurrentSelection();
         }
 
-        public void SetSelection(int level, SpinCenterTier tier)
-        {
-            _ = tier;
-            SetLevel(level);
-        }
-
-        public void SetSelectionByLevelRule(int level)
+        private void HandleLevelChanged(int level)
         {
             SetLevel(level);
         }

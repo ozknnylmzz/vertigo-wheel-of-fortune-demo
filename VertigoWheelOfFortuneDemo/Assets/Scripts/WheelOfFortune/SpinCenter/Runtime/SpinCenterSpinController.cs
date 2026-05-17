@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using Vertigo.WheelOfFortune.GameFlow.Runtime;
 using Vertigo.WheelOfFortune.SpinCenter.Data;
 
 namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
@@ -70,6 +71,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             IsSpinning = true;
             SetButtonInteractable(false);
             SpinStarted?.Invoke();
+            WheelGameEventBus.PublishSpinStarted();
 
             int turns = UnityEngine.Random.Range(GetMinSpinTurns(), GetMaxSpinTurns() + 1);
             float extraAngle = UnityEngine.Random.Range(GetMinExtraStopAngle(), GetMaxExtraStopAngle());
@@ -163,6 +165,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
 
             LastStopAngle = NormalizeAngle(ui_transform_wheel_animator.localEulerAngles.z);
             SpinCompleted?.Invoke(LastStopAngle);
+            WheelGameEventBus.PublishSpinCompleted(LastStopAngle);
             ResetSpinState();
         }
 
