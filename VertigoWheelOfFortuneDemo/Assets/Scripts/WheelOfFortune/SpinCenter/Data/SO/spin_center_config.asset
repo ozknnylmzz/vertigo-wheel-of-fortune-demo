@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bronze:
     titleValue: BRONZE SPIN
-    subtitleValue: Up To x3 Rewards
+    rewardInfoAmountValue: x3
+    titleColor: {r: 0.88, g: 0.6, b: 0.26, a: 1}
+    rewardInfoColor: {r: 1, g: 0.86, b: 0.68, a: 1}
     wheelBaseSprite: {fileID: 21300000, guid: 1055c0131cbf3494eb3dc320d6c2162d, type: 3}
     wheelIndicatorSprite: {fileID: 21300000, guid: 1d6e430bc4e714a2289395803a8932db, type: 3}
     slices:
@@ -44,7 +46,9 @@ MonoBehaviour:
       rewardAmountValue: x3
   silver:
     titleValue: SILVER SPIN
-    subtitleValue: Up To x10 Rewards
+    rewardInfoAmountValue: x10
+    titleColor: {r: 0.73, g: 0.85, b: 0.95, a: 1}
+    rewardInfoColor: {r: 0.86, g: 0.93, b: 1, a: 1}
     wheelBaseSprite: {fileID: 21300000, guid: 4adc03e667e45491db70ec40781ae400, type: 3}
     wheelIndicatorSprite: {fileID: 21300000, guid: 9a1d2e7c649114840a9bce5ad6971728, type: 3}
     slices:
@@ -74,7 +78,9 @@ MonoBehaviour:
       rewardAmountValue: x4
   golden:
     titleValue: GOLDEN SPIN
-    subtitleValue: Super Zone Rewards
+    rewardInfoAmountValue: x10
+    titleColor: {r: 1, g: 0.84, b: 0.24, a: 1}
+    rewardInfoColor: {r: 1, g: 0.93, b: 0.58, a: 1}
     wheelBaseSprite: {fileID: 21300000, guid: 5d0602a0319c3417bb7d72e62c13c419, type: 3}
     wheelIndicatorSprite: {fileID: 21300000, guid: ba745ce3973d448368e7301b2254bba5, type: 3}
     slices:

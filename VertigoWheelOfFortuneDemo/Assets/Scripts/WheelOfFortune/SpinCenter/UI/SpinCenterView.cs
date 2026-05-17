@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Vertigo.WheelOfFortune.SpinCenter.Data;
 
@@ -11,15 +12,17 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
     {
         private const string WheelBaseName = "ui_image_spin_base";
         private const string WheelIndicatorName = "ui_image_spin_indicator";
-        private const string TitleValueName = "ui_text_spin_title";
-        private const string SubtitleValueName = "ui_text_spin_subtitle";
+        private const string TitleValueName = "ui_text_spin_title_value";
+        private const string RewardInfoValueName = "ui_text_spin_rewards_info_value";
         private const string SliceContainerName = "ui_container_wheel_slices";
+        private const string RewardInfoPrefix = "Up To ";
+        private const string RewardInfoSuffix = " Rewards";
 
         [Header("Main UI References")]
         [SerializeField] private Image ui_image_spin_base;
         [SerializeField] private Image ui_image_spin_indicator;
-        [SerializeField] private TMP_Text ui_text_spin_title;
-        [SerializeField] private TMP_Text ui_text_spin_subtitle;
+        [SerializeField] private TMP_Text ui_text_spin_title_value;
+        [SerializeField] private TMP_Text ui_text_spin_rewards_info_value;
         [SerializeField] private Transform ui_container_wheel_slices;
 
         [Header("Slice Views")]
@@ -50,14 +53,16 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
                 ui_image_spin_indicator.enabled = visualData.wheelIndicatorSprite != null;
             }
 
-            if (ui_text_spin_title != null)
+            if (ui_text_spin_title_value != null)
             {
-                ui_text_spin_title.text = visualData.titleValue;
+                ui_text_spin_title_value.text = visualData.titleValue;
+                ui_text_spin_title_value.color = visualData.titleColor;
             }
 
-            if (ui_text_spin_subtitle != null)
+            if (ui_text_spin_rewards_info_value != null)
             {
-                ui_text_spin_subtitle.text = visualData.subtitleValue;
+                ui_text_spin_rewards_info_value.text = FormatRewardInfoText(visualData.rewardInfoAmountValue);
+                ui_text_spin_rewards_info_value.color = visualData.rewardInfoColor;
             }
 
             int viewCount = ui_wheel_slice_views.Count;
@@ -79,8 +84,8 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
         {
             AutoAssignByName(ref ui_image_spin_base, WheelBaseName);
             AutoAssignByName(ref ui_image_spin_indicator, WheelIndicatorName);
-            AutoAssignByName(ref ui_text_spin_title, TitleValueName);
-            AutoAssignByName(ref ui_text_spin_subtitle, SubtitleValueName);
+            AutoAssignByName(ref ui_text_spin_title_value, TitleValueName);
+            AutoAssignByName(ref ui_text_spin_rewards_info_value, RewardInfoValueName);
 
             if (ui_container_wheel_slices == null)
             {
@@ -175,6 +180,35 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
             }
 
             return null;
+        }
+
+        private static string FormatRewardInfoText(string rawAmountValue)
+        {
+            string amountValue = ExtractRewardInfoAmount(rawAmountValue);
+            return string.IsNullOrWhiteSpace(amountValue)
+                ? string.Empty
+                : string.Concat(RewardInfoPrefix, amountValue, RewardInfoSuffix);
+        }
+
+        private static string ExtractRewardInfoAmount(string rawAmountValue)
+        {
+            if (string.IsNullOrWhiteSpace(rawAmountValue))
+            {
+                return string.Empty;
+            }
+
+            string value = rawAmountValue.Trim();
+            bool hasPrefix = value.StartsWith(RewardInfoPrefix, StringComparison.OrdinalIgnoreCase);
+            bool hasSuffix = value.EndsWith(RewardInfoSuffix, StringComparison.OrdinalIgnoreCase);
+
+            if (!hasPrefix || !hasSuffix || value.Length <= RewardInfoPrefix.Length + RewardInfoSuffix.Length)
+            {
+                return value;
+            }
+
+            int start = RewardInfoPrefix.Length;
+            int length = value.Length - RewardInfoPrefix.Length - RewardInfoSuffix.Length;
+            return value.Substring(start, length).Trim();
         }
     }
 }

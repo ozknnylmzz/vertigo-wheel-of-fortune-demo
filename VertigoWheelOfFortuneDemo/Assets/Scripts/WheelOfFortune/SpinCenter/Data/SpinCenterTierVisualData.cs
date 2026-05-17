@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Vertigo.WheelOfFortune.SpinCenter.Data
 {
@@ -9,7 +10,13 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
     {
         [Header("Header Texts")]
         public string titleValue = "SILVER SPIN";
-        public string subtitleValue = "Up To x10 Rewards";
+        [FormerlySerializedAs("subtitleValue")]
+        [FormerlySerializedAs("rewardInfoValue")]
+        public string rewardInfoAmountValue = "x10";
+        
+        [Header("Header Colors")]
+        public Color titleColor = Color.white;
+        public Color rewardInfoColor = Color.white;
 
         [Header("Wheel Sprites")]
         public Sprite wheelBaseSprite;

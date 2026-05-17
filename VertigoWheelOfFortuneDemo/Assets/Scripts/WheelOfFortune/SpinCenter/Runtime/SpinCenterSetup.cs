@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 using Vertigo.WheelOfFortune.SpinCenter.Data;
 using Vertigo.WheelOfFortune.SpinCenter.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
 {
@@ -18,9 +21,24 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
 
         public event Action<SpinCenterTierVisualData> SpinCenterVisualApplied;
 
+#if UNITY_EDITOR
+        private bool editorPreviewApplyQueued;
+#endif
+
         private void Awake()
         {
             ApplyCurrentSelection();
+        }
+
+        private void OnDisable()
+        {
+#if UNITY_EDITOR
+            if (editorPreviewApplyQueued)
+            {
+                EditorApplication.delayCall -= ApplyPreviewFromDelayCall;
+                editorPreviewApplyQueued = false;
+            }
+#endif
         }
 
         private void OnValidate()
@@ -36,10 +54,18 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
 
             levelValue = Mathf.Clamp(levelValue, 1, SpinCenterConfigAsset.MaxLevel);
 
-            if (!isActiveAndEnabled)
+            if (!isActiveAndEnabled || spinCenterConfig == null)
             {
                 return;
             }
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                QueueEditorPreviewApply();
+                return;
+            }
+#endif
 
             ApplyCurrentSelection();
         }
@@ -74,5 +100,31 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         {
             SetLevel(level);
         }
+
+#if UNITY_EDITOR
+        private void QueueEditorPreviewApply()
+        {
+            if (editorPreviewApplyQueued)
+            {
+                return;
+            }
+
+            editorPreviewApplyQueued = true;
+            EditorApplication.delayCall += ApplyPreviewFromDelayCall;
+        }
+
+        private void ApplyPreviewFromDelayCall()
+        {
+            EditorApplication.delayCall -= ApplyPreviewFromDelayCall;
+            editorPreviewApplyQueued = false;
+
+            if (this == null || !isActiveAndEnabled || spinCenterConfig == null)
+            {
+                return;
+            }
+
+            ApplyCurrentSelection();
+        }
+#endif
     }
 }

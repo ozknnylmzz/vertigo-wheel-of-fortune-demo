@@ -110,7 +110,9 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
             }
 
             target.titleValue = source.titleValue;
-            target.subtitleValue = source.subtitleValue;
+            target.rewardInfoAmountValue = source.rewardInfoAmountValue;
+            target.titleColor = source.titleColor;
+            target.rewardInfoColor = source.rewardInfoColor;
             target.wheelBaseSprite = source.wheelBaseSprite;
             target.wheelIndicatorSprite = source.wheelIndicatorSprite;
 
