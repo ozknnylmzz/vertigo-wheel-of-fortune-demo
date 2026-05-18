@@ -501,26 +501,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: ui_canvas_root
       objectReference: {fileID: 0}
-    - target: {fileID: 7462277444138276101, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -4.901
-      objectReference: {fileID: 0}
-    - target: {fileID: 7462277444138276101, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -6.862
-      objectReference: {fileID: 0}
-    - target: {fileID: 7462277444138276101, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -0.49000168
-      objectReference: {fileID: 0}
-    - target: {fileID: 7462277444138276101, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 3680828847606565381, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
-    - {fileID: 6936514721851361085, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}

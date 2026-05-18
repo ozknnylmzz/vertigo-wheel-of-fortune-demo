@@ -37,7 +37,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         {
             max_level_value = Mathf.Max(1, max_level_value);
             level_value = Mathf.Clamp(level_value, 1, max_level_value);
-            round_value = Mathf.Max(1, round_value);
+            round_value = Mathf.Clamp(round_value, 1, WheelGameEventBus.MaxRoundValue);
         }
 
         private void OnEnable()
@@ -96,7 +96,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
         public void SetRound(int round)
         {
-            int normalizedRound = Mathf.Max(1, round);
+            int normalizedRound = Mathf.Clamp(round, 1, WheelGameEventBus.MaxRoundValue);
             if (normalizedRound == round_value)
             {
                 return;
@@ -109,7 +109,13 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
         public int IncrementRound()
         {
-            round_value = Mathf.Max(1, round_value + 1);
+            int updatedRound = Mathf.Min(round_value + 1, WheelGameEventBus.MaxRoundValue);
+            if (updatedRound == round_value)
+            {
+                return round_value;
+            }
+
+            round_value = updatedRound;
             RoundChanged?.Invoke(round_value);
             WheelGameEventBus.PublishRoundChanged(round_value);
             return round_value;
@@ -131,6 +137,12 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         #region Event Bus Handlers
         private void HandleSpinStarted()
         {
+            if (round_value >= WheelGameEventBus.MaxRoundValue)
+            {
+                SetGameState(WheelGameState.Win);
+                return;
+            }
+
             IncrementLevel();
             IncrementRound();
             SetGameState(WheelGameState.Spinning);
@@ -138,7 +150,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
         private void HandleSpinCompleted(float _)
         {
-            SetGameState(WheelGameState.Idle);
+            SetGameState(round_value >= WheelGameEventBus.MaxRoundValue ? WheelGameState.Win : WheelGameState.Idle);
         }
         #endregion
     }

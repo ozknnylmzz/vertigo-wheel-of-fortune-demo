@@ -154,7 +154,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             highlightedSlotBinding = null;
 
             int centerIndex = ResolveCenterIndex();
-            int normalizedRound = Mathf.Max(1, currentRound);
+            int normalizedRound = Mathf.Clamp(currentRound, 1, WheelGameEventBus.MaxRoundValue);
 
             for (int i = 0; i < slotBindings.Count; i++)
             {
@@ -316,7 +316,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
 
         private string ResolveSlotText(int roundValue)
         {
-            if (roundValue < 1)
+            if (roundValue < 1 || roundValue > WheelGameEventBus.MaxRoundValue)
             {
                 return string.Empty;
             }

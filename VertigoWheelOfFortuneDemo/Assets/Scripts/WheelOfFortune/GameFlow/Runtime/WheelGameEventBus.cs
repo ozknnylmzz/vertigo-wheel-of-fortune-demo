@@ -4,6 +4,10 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 {
     public static class WheelGameEventBus
     {
+        #region Constants
+        public const int MaxRoundValue = 60;
+        #endregion
+
         #region Events
         public static event Action SpinStarted;
         public static event Action<float> SpinCompleted;
@@ -37,7 +41,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
         public static void PublishRoundChanged(int roundValue)
         {
-            LastKnownRound = roundValue < 1 ? 1 : roundValue;
+            LastKnownRound = Math.Min(MaxRoundValue, Math.Max(1, roundValue));
             RoundChanged?.Invoke(LastKnownRound);
         }
 

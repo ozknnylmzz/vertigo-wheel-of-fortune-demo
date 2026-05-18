@@ -1701,8 +1701,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1742613509745002981}
   - {fileID: 1599689539647010610}
+  - {fileID: 1742613509745002981}
   - {fileID: 7661412264431935404}
   m_Father: {fileID: 6946086801107546964}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4685,7 +4685,7 @@ GameObject:
   - component: {fileID: 2285255916530760996}
   - component: {fileID: 4998317858832075750}
   m_Layer: 5
-  m_Name: ui_text_zone_super_value
+  m_Name: ui_text_zone_super_label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4990,7 +4990,7 @@ GameObject:
   - component: {fileID: 4190410410568771203}
   - component: {fileID: 2222891448537417712}
   m_Layer: 5
-  m_Name: ui_text_zone_safe_value
+  m_Name: ui_text_zone_safe_label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5869,8 +5869,32 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6325893493875441923, guid: 13601887d7df54464ad96984786b2636, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6302717664471609528}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1626378710073648525, guid: 13601887d7df54464ad96984786b2636, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3170515864166832714}
   m_SourcePrefab: {fileID: 100100000, guid: 13601887d7df54464ad96984786b2636, type: 3}
+--- !u!1 &2395190874542659546 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1626378710073648525, guid: 13601887d7df54464ad96984786b2636, type: 3}
+  m_PrefabInstance: {fileID: 4012535439673913943}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3170515864166832714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2395190874542659546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28137c9f5a7b4475a18b5a7d4f0b7c58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ui_text_zone_safe_value: {fileID: 29289414369838488}
+  ui_text_zone_super_value: {fileID: 7014810426378417264}
+  safeZoneInterval: 5
+  superZoneInterval: 30
 --- !u!224 &6946086801107546964 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6325893493875441923, guid: 13601887d7df54464ad96984786b2636, type: 3}
