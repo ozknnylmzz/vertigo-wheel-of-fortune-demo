@@ -16,6 +16,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         public static event Action<int> RoundChanged;
         public static event Action<WheelGameState> GameStateChanged;
         public static event Action<WheelRewardData> RewardWon;
+        public static event Action BombHit;
         #endregion
 
         #region Last Known State
@@ -56,6 +57,11 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         public static void PublishRewardWon(WheelRewardData rewardData)
         {
             RewardWon?.Invoke(rewardData);
+        }
+
+        public static void PublishBombHit()
+        {
+            BombHit?.Invoke();
         }
         #endregion
     }

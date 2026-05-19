@@ -1,17 +1,18 @@
 using UnityEngine;
+using Vertigo.WheelOfFortune.Rewards.Data;
 
 namespace Vertigo.WheelOfFortune.Rewards.Runtime
 {
     public struct WheelRewardData
     {
-        public WheelRewardData(string rewardKey, Sprite rewardIcon, string rewardAmountValue)
+        public WheelRewardData(WheelRewardType rewardType, Sprite rewardIcon, string rewardAmountValue)
         {
-            this.rewardKey = rewardKey;
+            this.rewardType = rewardType;
             this.rewardIcon = rewardIcon;
             this.rewardAmountValue = rewardAmountValue;
         }
 
-        public string rewardKey;
+        public WheelRewardType rewardType;
         public Sprite rewardIcon;
         public string rewardAmountValue;
     }

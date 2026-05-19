@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Vertigo.WheelOfFortune.GameFlow.Runtime;
+using Vertigo.WheelOfFortune.Rewards.Data;
 using Vertigo.WheelOfFortune.SpinCenter.Data;
 using Vertigo.WheelOfFortune.SpinCenter.UI;
 #if UNITY_EDITOR
@@ -96,6 +97,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             }
 
             SpinCenterTierVisualData visualData = spinCenterConfig.ResolveByLevelOrThrow(levelValue);
+            ResolveSliceAmounts(visualData, levelValue);
             spinCenterView.gameObject.SetActive(true);
             spinCenterView.ApplyVisualData(visualData);
             SpinCenterVisualApplied?.Invoke(visualData);
@@ -110,6 +112,24 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         private void HandleLevelChanged(int level)
         {
             SetLevel(level);
+        }
+
+        private static void ResolveSliceAmounts(SpinCenterTierVisualData visualData, int level)
+        {
+            if (visualData.slices == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < visualData.slices.Count; i++)
+            {
+                SpinCenterSliceVisualData sliceData = visualData.slices[i];
+                if (sliceData != null)
+                {
+                    sliceData.selectedRewardAmountValue =
+                        WheelRewardAmountResolver.Resolve(level, sliceData.rewardType, sliceData.rewardAmountType);
+                }
+            }
         }
 
 #if UNITY_EDITOR

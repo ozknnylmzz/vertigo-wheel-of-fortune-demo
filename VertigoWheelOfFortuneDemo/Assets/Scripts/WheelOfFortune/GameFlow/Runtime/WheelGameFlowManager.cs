@@ -49,6 +49,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
             WheelGameEventBus.SpinStarted += HandleSpinStarted;
             WheelGameEventBus.SpinCompleted += HandleSpinCompleted;
+            WheelGameEventBus.BombHit += HandleBombHit;
             WheelGameEventBus.PublishLevelChanged(level_value);
             WheelGameEventBus.PublishRoundChanged(round_value);
             WheelGameEventBus.PublishGameStateChanged(game_state);
@@ -63,6 +64,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
             WheelGameEventBus.SpinStarted -= HandleSpinStarted;
             WheelGameEventBus.SpinCompleted -= HandleSpinCompleted;
+            WheelGameEventBus.BombHit -= HandleBombHit;
         }
         #endregion
 
@@ -150,7 +152,17 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
         private void HandleSpinCompleted(float _)
         {
+            if (WheelGameEventBus.LastKnownGameState == WheelGameState.Lose)
+            {
+                return;
+            }
+
             SetGameState(round_value >= WheelGameEventBus.MaxRoundValue ? WheelGameState.Win : WheelGameState.Idle);
+        }
+
+        private void HandleBombHit()
+        {
+            SetGameState(WheelGameState.Lose);
         }
         #endregion
     }

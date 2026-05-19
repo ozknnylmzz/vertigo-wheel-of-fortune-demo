@@ -60,6 +60,11 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
         {
             int normalizedLevel = Mathf.Clamp(level, 1, MaxLevel);
 
+            if (normalizedLevel == 1)
+            {
+                return SpinCenterTier.Silver;
+            }
+
             if (normalizedLevel % 30 == 0)
             {
                 return SpinCenterTier.Golden;
@@ -141,9 +146,9 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
 
                 target.slices.Add(new SpinCenterSliceVisualData
                 {
-                    sliceId = sourceSlice.sliceId,
+                    rewardType = sourceSlice.rewardType,
+                    rewardAmountType = sourceSlice.rewardAmountType,
                     rewardIcon = sourceSlice.rewardIcon,
-                    rewardAmountValue = sourceSlice.rewardAmountValue
                 });
             }
         }

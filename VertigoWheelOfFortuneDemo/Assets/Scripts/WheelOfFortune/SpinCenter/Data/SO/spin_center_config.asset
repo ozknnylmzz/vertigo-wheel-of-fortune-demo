@@ -20,30 +20,51 @@ MonoBehaviour:
     wheelBaseSprite: {fileID: 21300000, guid: 1055c0131cbf3494eb3dc320d6c2162d, type: 3}
     wheelIndicatorSprite: {fileID: 21300000, guid: 1d6e430bc4e714a2289395803a8932db, type: 3}
     slices:
-    - sliceId: 1
+    - rewardType: 0
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 2c83e907688b54cb1a7070e5f4b2b689, type: 3}
-      rewardAmountValue: x3166
-    - sliceId: 2
+    - rewardType: 90
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 7a6cc70cf55264edc930d3f65acc5a2e, type: 3}
-      rewardAmountValue: 
-    - sliceId: 3
+    - rewardType: 0
+      rewardAmountType: 10
       rewardIcon: {fileID: 21300000, guid: 2c83e907688b54cb1a7070e5f4b2b689, type: 3}
-      rewardAmountValue: x2145
-    - sliceId: 4
+    - rewardType: 90
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: dfa32647d25534b2c80d5974e0b882b5, type: 3}
-      rewardAmountValue: 
-    - sliceId: 5
+    - rewardType: 0
+      rewardAmountType: 20
       rewardIcon: {fileID: 21300000, guid: 8827839bb4541439e95a77ba33edf9e2, type: 3}
-      rewardAmountValue: x9
-    - sliceId: 6
-      rewardIcon: {fileID: 21300000, guid: 0c56cf29b43d5401f8323126490da7b1, type: 3}
-      rewardAmountValue: x1
-    - sliceId: 7
-      rewardIcon: {fileID: 21300000, guid: a6a2ab25e08c04035ae62dd900c5ed36, type: 3}
-      rewardAmountValue: x1
-    - sliceId: 8
-      rewardIcon: {fileID: 21300000, guid: e2581fb6b14de4c29b7469a94cef265f, type: 3}
-      rewardAmountValue: x3
+    - rewardType: 10
+      rewardAmountType: 40
+      rewardIcon: {fileID: 21300000, guid: 790282e6284534be9b8b7c536f223e39, type: 3}
+    - rewardType: 10
+      rewardAmountType: 40
+      rewardIcon: {fileID: 21300000, guid: 2bfb782b80b964da9816fa1522b6096d, type: 3}
+    - rewardType: 10
+      rewardAmountType: 0
+      rewardIcon: {fileID: 21300000, guid: 92a19fc0384c746499be529034888f47, type: 3}
+    - rewardType: 10
+      rewardAmountType: 40
+      rewardIcon: {fileID: 21300000, guid: 59ff4e4229d504b47b4bd2bd1f3b7035, type: 3}
+    - rewardType: 10
+      rewardAmountType: 40
+      rewardIcon: {fileID: 21300000, guid: 6e43811de403342e2abe9501fafaeadd, type: 3}
+    - rewardType: 10
+      rewardAmountType: 40
+      rewardIcon: {fileID: 21300000, guid: 1e729eeecd9d14824a3f1f2fd5fc9beb, type: 3}
+    - rewardType: 10
+      rewardAmountType: 40
+      rewardIcon: {fileID: 21300000, guid: 3ff938b4776ce4509808b408b67771f1, type: 3}
+    - rewardType: 10
+      rewardAmountType: 40
+      rewardIcon: {fileID: 21300000, guid: 875a5a8969c8f4a649b5882a6995d08c, type: 3}
+    - rewardType: 10
+      rewardAmountType: 40
+      rewardIcon: {fileID: 21300000, guid: 06959a7c6fda74cf0874132fbdbd6777, type: 3}
+    - rewardType: 10
+      rewardAmountType: 40
+      rewardIcon: {fileID: 21300000, guid: 06959a7c6fda74cf0874132fbdbd6777, type: 3}
   silver:
     titleValue: SILVER SPIN
     rewardInfoAmountValue: x10
@@ -52,30 +73,30 @@ MonoBehaviour:
     wheelBaseSprite: {fileID: 21300000, guid: 4adc03e667e45491db70ec40781ae400, type: 3}
     wheelIndicatorSprite: {fileID: 21300000, guid: 9a1d2e7c649114840a9bce5ad6971728, type: 3}
     slices:
-    - sliceId: 1
-      rewardIcon: {fileID: 21300000, guid: a6a2ab25e08c04035ae62dd900c5ed36, type: 3}
-      rewardAmountValue: x2
-    - sliceId: 2
-      rewardIcon: {fileID: 21300000, guid: 76dfcc91e7e534eb1bc843809f4244dd, type: 3}
-      rewardAmountValue: x1
-    - sliceId: 3
+    - rewardType: 10
+      rewardAmountType: 0
+      rewardIcon: {fileID: 21300000, guid: 59ff4e4229d504b47b4bd2bd1f3b7035, type: 3}
+    - rewardType: 10
+      rewardAmountType: 0
+      rewardIcon: {fileID: 21300000, guid: 6e43811de403342e2abe9501fafaeadd, type: 3}
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 3db38b1bed72e401abcb0f70a566d78a, type: 3}
-      rewardAmountValue: x1
-    - sliceId: 4
-      rewardIcon: {fileID: 21300000, guid: d5766e20d5fb143b19e8666fdf62aa4c, type: 3}
-      rewardAmountValue: x1
-    - sliceId: 5
-      rewardIcon: {fileID: 21300000, guid: dd703137b648e4306a1c49ff9f40a5a4, type: 3}
-      rewardAmountValue: x1
-    - sliceId: 6
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 8827839bb4541439e95a77ba33edf9e2, type: 3}
-      rewardAmountValue: x20
-    - sliceId: 7
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 2c83e907688b54cb1a7070e5f4b2b689, type: 3}
-      rewardAmountValue: x7224
-    - sliceId: 8
+    - rewardType: 10
+      rewardAmountType: 0
+      rewardIcon: {fileID: 21300000, guid: 8827839bb4541439e95a77ba33edf9e2, type: 3}
+    - rewardType: 10
+      rewardAmountType: 0
+      rewardIcon: {fileID: 21300000, guid: 2c83e907688b54cb1a7070e5f4b2b689, type: 3}
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 76dfcc91e7e534eb1bc843809f4244dd, type: 3}
-      rewardAmountValue: x4
   golden:
     titleValue: GOLDEN SPIN
     rewardInfoAmountValue: x10
@@ -84,27 +105,27 @@ MonoBehaviour:
     wheelBaseSprite: {fileID: 21300000, guid: 5d0602a0319c3417bb7d72e62c13c419, type: 3}
     wheelIndicatorSprite: {fileID: 21300000, guid: ba745ce3973d448368e7301b2254bba5, type: 3}
     slices:
-    - sliceId: 1
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 77d05ec87babf4b139ae25120302c6a7, type: 3}
-      rewardAmountValue: x3
-    - sliceId: 2
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: d4293de623a864649b998f86a8b69b36, type: 3}
-      rewardAmountValue: x3
-    - sliceId: 3
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 37c0ee94c086b4c8f831441b31a733c0, type: 3}
-      rewardAmountValue: x4
-    - sliceId: 4
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: d5766e20d5fb143b19e8666fdf62aa4c, type: 3}
-      rewardAmountValue: x1
-    - sliceId: 5
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 3db38b1bed72e401abcb0f70a566d78a, type: 3}
-      rewardAmountValue: x1
-    - sliceId: 6
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: f433a3742ddd749ac813a95958a15442, type: 3}
-      rewardAmountValue: 
-    - sliceId: 7
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: 0c8d7e489a98248619f64180b6c20c51, type: 3}
-      rewardAmountValue: x1
-    - sliceId: 8
+    - rewardType: 10
+      rewardAmountType: 0
       rewardIcon: {fileID: 21300000, guid: d3fca36ef58c04ff4ac0ae4998d1dff3, type: 3}
-      rewardAmountValue: x1

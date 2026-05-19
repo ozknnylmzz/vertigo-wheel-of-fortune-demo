@@ -1,13 +1,15 @@
 using System;
 using UnityEngine;
+using Vertigo.WheelOfFortune.Rewards.Data;
 
 namespace Vertigo.WheelOfFortune.SpinCenter.Data
 {
     [Serializable]
     public sealed class SpinCenterSliceVisualData
     {
-        public string sliceId = "slice_00";
+        public WheelRewardType rewardType = WheelRewardType.Currency;
+        public WheelRewardAmountType rewardAmountType = WheelRewardAmountType.None;
         public Sprite rewardIcon;
-        public string rewardAmountValue = "x1";
+        [NonSerialized] public string selectedRewardAmountValue;
     }
 }

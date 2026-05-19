@@ -383,7 +383,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
                 return roundTrackTopSettings.GoldenSlotTextColor;
             }
 
-            if (normalizedRound % silverInterval == 0)
+            if (normalizedRound == 1 || normalizedRound % silverInterval == 0)
             {
                 return roundTrackTopSettings.SilverSlotTextColor;
             }
@@ -407,7 +407,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
                 return roundTrackTopSettings.GoldenCurrentSlotTextColor;
             }
 
-            if (normalizedLevel % silverInterval == 0)
+            if (normalizedLevel == 1 || normalizedLevel % silverInterval == 0)
             {
                 return roundTrackTopSettings.SilverCurrentSlotTextColor;
             }

@@ -41,8 +41,8 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
 
             if (ui_text_wheel_slice_amount_value != null)
             {
-                ui_text_wheel_slice_amount_value.text = data.rewardAmountValue;
-                ui_text_wheel_slice_amount_value.gameObject.SetActive(!string.IsNullOrWhiteSpace(data.rewardAmountValue));
+                ui_text_wheel_slice_amount_value.text = data.selectedRewardAmountValue;
+                ui_text_wheel_slice_amount_value.gameObject.SetActive(!string.IsNullOrWhiteSpace(data.selectedRewardAmountValue));
             }
         }
     }

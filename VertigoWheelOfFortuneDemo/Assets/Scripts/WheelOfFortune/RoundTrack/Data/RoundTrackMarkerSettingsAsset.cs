@@ -50,7 +50,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Data
                 return goldenStage;
             }
 
-            if (normalizedLevel % silverInterval == 0)
+            if (normalizedLevel == 1 || normalizedLevel % silverInterval == 0)
             {
                 return silverStage;
             }

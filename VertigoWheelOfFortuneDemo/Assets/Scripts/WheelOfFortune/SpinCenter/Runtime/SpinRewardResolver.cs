@@ -1,5 +1,6 @@
 using UnityEngine;
 using Vertigo.WheelOfFortune.GameFlow.Runtime;
+using Vertigo.WheelOfFortune.Rewards.Data;
 using Vertigo.WheelOfFortune.Rewards.Runtime;
 using Vertigo.WheelOfFortune.SpinCenter.Data;
 
@@ -41,37 +42,41 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         #region Event Handlers
         private void HandleSpinCompleted(float stopAngle)
         {
-            SpinCenterSliceVisualData rewardData = ResolveRewardData(stopAngle);
+            SpinCenterTierVisualData tierData = ResolveTierData();
+            if (tierData == null || tierData.slices == null || tierData.slices.Count == 0)
+            {
+                return;
+            }
+
+            int sliceIndex = ResolveSliceIndex(stopAngle, tierData.slices.Count);
+            SpinCenterSliceVisualData rewardData = tierData.slices[sliceIndex];
             if (rewardData == null)
             {
                 return;
             }
 
+            if (rewardData.rewardType == WheelRewardType.Bomb)
+            {
+                WheelGameEventBus.PublishBombHit();
+                return;
+            }
+
             WheelGameEventBus.PublishRewardWon(new WheelRewardData(
-                ResolveRewardKey(rewardData),
+                rewardData.rewardType,
                 rewardData.rewardIcon,
-                rewardData.rewardAmountValue));
+                ResolveRewardAmountValue(rewardData)));
         }
         #endregion
 
         #region Reward Resolve
-        private SpinCenterSliceVisualData ResolveRewardData(float stopAngle)
+        private SpinCenterTierVisualData ResolveTierData()
         {
             if (spinCenterConfig == null)
             {
                 return null;
             }
 
-            SpinCenterTierVisualData tierData =
-                spinCenterConfig.ResolveByLevelOrThrow(WheelGameEventBus.LastKnownLevel);
-
-            if (tierData.slices == null || tierData.slices.Count == 0)
-            {
-                return null;
-            }
-
-            int sliceIndex = ResolveSliceIndex(stopAngle, tierData.slices.Count);
-            return tierData.slices[sliceIndex];
+            return spinCenterConfig.ResolveByLevelOrThrow(WheelGameEventBus.LastKnownLevel);
         }
 
         private static int ResolveSliceIndex(float stopAngle, int sliceCount)
@@ -83,14 +88,14 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             return Mathf.RoundToInt(indexAngle / sliceAngle) % sliceCount;
         }
 
-        private static string ResolveRewardKey(SpinCenterSliceVisualData rewardData)
+        private static string ResolveRewardAmountValue(SpinCenterSliceVisualData rewardData)
         {
-            if (rewardData.rewardIcon != null)
-            {
-                return rewardData.rewardIcon.name;
-            }
-
-            return rewardData.sliceId;
+            return !string.IsNullOrWhiteSpace(rewardData.selectedRewardAmountValue)
+                ? rewardData.selectedRewardAmountValue
+                : WheelRewardAmountResolver.Resolve(
+                    WheelGameEventBus.LastKnownLevel,
+                    rewardData.rewardType,
+                    rewardData.rewardAmountType);
         }
         #endregion
     }

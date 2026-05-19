@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using Vertigo.WheelOfFortune.GameFlow.Runtime;
+using Vertigo.WheelOfFortune.Rewards.Data;
 using Vertigo.WheelOfFortune.Rewards.UI;
 
 namespace Vertigo.WheelOfFortune.Rewards.Runtime
@@ -55,10 +56,16 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 return;
             }
 
+            if (rewardData.rewardType == WheelRewardType.Bomb)
+            {
+                return;
+            }
+
             string rewardKey = ResolveRewardKey(rewardData);
             if (!rewardItems.TryGetValue(rewardKey, out RewardItemState itemState))
             {
-                itemState = new RewardItemState(Instantiate(rewardItemPrefab, ui_container_rewards_list));
+                itemState = new RewardItemState(Instantiate(rewardItemPrefab, ui_container_rewards_list), rewardData.rewardType);
+                itemState.ItemView.transform.SetSiblingIndex(ResolveSiblingIndex(rewardData.rewardType));
                 rewardItems.Add(rewardKey, itemState);
             }
 
@@ -71,12 +78,10 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
         #region Reward Helpers
         private static string ResolveRewardKey(WheelRewardData rewardData)
         {
-            if (!string.IsNullOrWhiteSpace(rewardData.rewardKey))
-            {
-                return rewardData.rewardKey;
-            }
-
-            return rewardData.rewardIcon != null ? rewardData.rewardIcon.name : string.Empty;
+            string rewardTypeKey = ((int)rewardData.rewardType).ToString(CultureInfo.InvariantCulture);
+            return rewardData.rewardIcon != null
+                ? rewardTypeKey + "_" + rewardData.rewardIcon.GetInstanceID().ToString(CultureInfo.InvariantCulture)
+                : rewardTypeKey;
         }
 
         private static int ParseRewardAmount(string rewardAmountValue)
@@ -112,17 +117,33 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
         {
             return amountPrefix + amount.ToString("N0", CultureInfo.InvariantCulture);
         }
+
+        private int ResolveSiblingIndex(WheelRewardType rewardType)
+        {
+            int siblingIndex = 0;
+            foreach (RewardItemState itemState in rewardItems.Values)
+            {
+                if (itemState.RewardType <= rewardType)
+                {
+                    siblingIndex++;
+                }
+            }
+
+            return siblingIndex;
+        }
         #endregion
 
         #region Nested Types
         private sealed class RewardItemState
         {
-            public RewardItemState(RewardListItemView itemView)
+            public RewardItemState(RewardListItemView itemView, WheelRewardType rewardType)
             {
                 ItemView = itemView;
+                RewardType = rewardType;
             }
 
             public RewardListItemView ItemView { get; }
+            public WheelRewardType RewardType { get; }
             public int AmountValue { get; set; }
             public string AmountPrefix { get; set; } = string.Empty;
         }
