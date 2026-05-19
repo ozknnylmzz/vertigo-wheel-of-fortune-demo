@@ -34,11 +34,13 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         private void OnEnable()
         {
             SubscribeButton();
-            SetButtonInteractable(!IsMaxRoundReached());
+            WheelGameEventBus.GameStateChanged += HandleGameStateChanged;
+            SetButtonInteractable(CanStartSpin());
         }
 
         private void OnDisable()
         {
+            WheelGameEventBus.GameStateChanged -= HandleGameStateChanged;
             UnsubscribeButton();
             StopSpinIfRunning();
             SetButtonInteractable(true);
@@ -51,7 +53,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
 
         public bool TryStartSpin()
         {
-            if (IsSpinning || ui_transform_wheel_animator == null || IsMaxRoundReached())
+            if (!CanStartSpin())
             {
                 return false;
             }
@@ -136,6 +138,11 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             TryStartSpin();
         }
 
+        private void HandleGameStateChanged(WheelGameState _)
+        {
+            SetButtonInteractable(CanStartSpin());
+        }
+
         private void StopSpinIfRunning()
         {
             if (spinSequence == null || !spinSequence.IsActive())
@@ -178,7 +185,15 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         {
             spinSequence = null;
             IsSpinning = false;
-            SetButtonInteractable(!IsMaxRoundReached());
+            SetButtonInteractable(CanStartSpin());
+        }
+
+        private bool CanStartSpin()
+        {
+            return !IsSpinning &&
+                   ui_transform_wheel_animator != null &&
+                   WheelGameEventBus.LastKnownGameState != WheelGameState.Spinning &&
+                   !IsMaxRoundReached();
         }
 
         private static bool IsMaxRoundReached()

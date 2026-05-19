@@ -37,6 +37,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         private float spawnX;
         private bool initialized;
         private int shiftsSinceLastSpawn;
+        private int currentRoundValue = 1;
         private RoundSlotBinding highlightedSlotBinding;
         #endregion
 
@@ -53,7 +54,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             }
 
             InitializeTrack(WheelGameEventBus.LastKnownRound);
-            WheelGameEventBus.SpinStarted += HandleSpinStarted;
+            WheelGameEventBus.RoundChanged += HandleRoundChanged;
             WheelGameEventBus.LevelChanged += HandleLevelChanged;
         }
 
@@ -61,7 +62,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         {
             if (Application.isPlaying)
             {
-                WheelGameEventBus.SpinStarted -= HandleSpinStarted;
+                WheelGameEventBus.RoundChanged -= HandleRoundChanged;
                 WheelGameEventBus.LevelChanged -= HandleLevelChanged;
             }
 
@@ -126,8 +127,15 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         #endregion
 
         #region Event Handlers
-        private void HandleSpinStarted()
+        private void HandleRoundChanged(int roundValue)
         {
+            int normalizedRound = Mathf.Clamp(roundValue, 1, WheelGameEventBus.MaxRoundValue);
+            if (normalizedRound == currentRoundValue)
+            {
+                return;
+            }
+
+            currentRoundValue = normalizedRound;
             ShiftLeftOnce();
         }
 
@@ -155,6 +163,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
 
             int centerIndex = ResolveCenterIndex();
             int normalizedRound = Mathf.Clamp(currentRound, 1, WheelGameEventBus.MaxRoundValue);
+            currentRoundValue = normalizedRound;
 
             for (int i = 0; i < slotBindings.Count; i++)
             {
@@ -195,7 +204,6 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
                 return;
             }
 
-            ApplyCurrentSlotTextColor(WheelGameEventBus.LastKnownLevel, true);
             shiftSequence = DOTween.Sequence().SetTarget(this);
 
             for (int i = 0; i < slotBindings.Count; i++)

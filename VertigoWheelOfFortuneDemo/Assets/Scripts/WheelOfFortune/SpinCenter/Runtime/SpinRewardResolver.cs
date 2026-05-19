@@ -45,6 +45,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             SpinCenterTierVisualData tierData = ResolveTierData();
             if (tierData == null || tierData.slices == null || tierData.slices.Count == 0)
             {
+                WheelGameEventBus.PublishRewardCollectionCompleted();
                 return;
             }
 
@@ -52,6 +53,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             SpinCenterSliceVisualData rewardData = tierData.slices[sliceIndex];
             if (rewardData == null)
             {
+                WheelGameEventBus.PublishRewardCollectionCompleted();
                 return;
             }
 
@@ -61,10 +63,15 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
                 return;
             }
 
-            WheelGameEventBus.PublishRewardWon(new WheelRewardData(
+            bool rewardHandled = WheelGameEventBus.PublishRewardWon(new WheelRewardData(
                 rewardData.rewardType,
                 rewardData.rewardIcon,
                 ResolveRewardAmountValue(rewardData)));
+
+            if (!rewardHandled)
+            {
+                WheelGameEventBus.PublishRewardCollectionCompleted();
+            }
         }
         #endregion
 

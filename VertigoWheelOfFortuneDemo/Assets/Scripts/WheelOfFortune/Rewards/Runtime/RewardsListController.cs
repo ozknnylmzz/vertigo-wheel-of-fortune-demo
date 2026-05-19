@@ -56,11 +56,13 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
         {
             if (ui_container_rewards_list == null || rewardItemPrefab == null)
             {
+                WheelGameEventBus.PublishRewardCollectionCompleted();
                 return;
             }
 
             if (rewardData.rewardType == WheelRewardType.None || rewardData.rewardType == WheelRewardType.Bomb)
             {
+                WheelGameEventBus.PublishRewardCollectionCompleted();
                 return;
             }
 
@@ -73,11 +75,13 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                     rewardAnimationStartPoint,
                     itemState.ItemView.RectTransform,
                     rewardAmount,
-                    amountStep => AddRewardAmount(itemState, amountStep));
+                    amountStep => AddRewardAmount(itemState, amountStep),
+                    WheelGameEventBus.PublishRewardCollectionCompleted);
                 return;
             }
 
             AddRewardAmount(itemState, rewardAmount);
+            WheelGameEventBus.PublishRewardCollectionCompleted();
         }
         #endregion
 

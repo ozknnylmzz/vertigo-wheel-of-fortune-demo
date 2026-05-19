@@ -48,7 +48,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
             }
 
             WheelGameEventBus.SpinStarted += HandleSpinStarted;
-            WheelGameEventBus.SpinCompleted += HandleSpinCompleted;
+            WheelGameEventBus.RewardCollectionCompleted += HandleRewardCollectionCompleted;
             WheelGameEventBus.BombHit += HandleBombHit;
             WheelGameEventBus.PublishLevelChanged(level_value);
             WheelGameEventBus.PublishRoundChanged(round_value);
@@ -63,7 +63,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
             }
 
             WheelGameEventBus.SpinStarted -= HandleSpinStarted;
-            WheelGameEventBus.SpinCompleted -= HandleSpinCompleted;
+            WheelGameEventBus.RewardCollectionCompleted -= HandleRewardCollectionCompleted;
             WheelGameEventBus.BombHit -= HandleBombHit;
         }
         #endregion
@@ -134,6 +134,14 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
             GameStateChanged?.Invoke(game_state);
             WheelGameEventBus.PublishGameStateChanged(game_state);
         }
+
+        public void ContinueAfterBomb()
+        {
+            if (game_state == WheelGameState.Lose)
+            {
+                SetGameState(WheelGameState.Idle);
+            }
+        }
         #endregion
 
         #region Event Bus Handlers
@@ -145,18 +153,18 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
                 return;
             }
 
-            IncrementLevel();
-            IncrementRound();
             SetGameState(WheelGameState.Spinning);
         }
 
-        private void HandleSpinCompleted(float _)
+        private void HandleRewardCollectionCompleted()
         {
-            if (WheelGameEventBus.LastKnownGameState == WheelGameState.Lose)
+            if (game_state != WheelGameState.Spinning || WheelGameEventBus.LastKnownGameState == WheelGameState.Lose)
             {
                 return;
             }
 
+            IncrementRound();
+            IncrementLevel();
             SetGameState(round_value >= WheelGameEventBus.MaxRoundValue ? WheelGameState.Win : WheelGameState.Idle);
         }
 

@@ -16,6 +16,8 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         public static event Action<int> RoundChanged;
         public static event Action<WheelGameState> GameStateChanged;
         public static event Action<WheelRewardData> RewardWon;
+        public static event Action RewardCollectionCompleted;
+        public static event Action ExitConfirmRequested;
         public static event Action BombHit;
         #endregion
 
@@ -54,14 +56,30 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
             GameStateChanged?.Invoke(state);
         }
 
-        public static void PublishRewardWon(WheelRewardData rewardData)
+        public static bool PublishRewardWon(WheelRewardData rewardData)
         {
+            if (RewardWon == null)
+            {
+                return false;
+            }
+
             RewardWon?.Invoke(rewardData);
+            return true;
+        }
+
+        public static void PublishRewardCollectionCompleted()
+        {
+            RewardCollectionCompleted?.Invoke();
         }
 
         public static void PublishBombHit()
         {
             BombHit?.Invoke();
+        }
+
+        public static void PublishExitConfirmRequested()
+        {
+            ExitConfirmRequested?.Invoke();
         }
         #endregion
     }
