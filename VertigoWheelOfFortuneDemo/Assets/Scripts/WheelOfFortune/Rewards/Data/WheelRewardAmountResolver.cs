@@ -2,38 +2,22 @@ using UnityEngine;
 
 namespace Vertigo.WheelOfFortune.Rewards.Data
 {
-    public enum WheelRewardAmountType
-    {
-        None = 0,
-        Cash = 10,
-        Gold = 20,
-        Cards = 30,
-        Points = 40
-    }
-
     public static class WheelRewardAmountResolver
     {
         private const int MaxLevel = 60;
 
-        public static string Resolve(int level, WheelRewardType rewardType, WheelRewardAmountType amountType)
-        {
-            return Resolve(level, amountType == WheelRewardAmountType.None
-                ? ResolveDefaultAmountType(rewardType)
-                : amountType);
-        }
-
-        public static string Resolve(int level, WheelRewardAmountType amountType)
+        public static string Resolve(int level, WheelRewardType rewardType)
         {
             int normalizedLevel = Mathf.Clamp(level, 1, MaxLevel);
 
-            switch (amountType)
+            switch (rewardType)
             {
-                case WheelRewardAmountType.Cash:
+                case WheelRewardType.Cash:
                     return Format(ResolveCashAmount(normalizedLevel));
-                case WheelRewardAmountType.Gold:
+                case WheelRewardType.Gold:
                     return Format(ResolveGoldAmount(normalizedLevel));
-                case WheelRewardAmountType.Cards:
-                case WheelRewardAmountType.Points:
+                case WheelRewardType.Cards:
+                case WheelRewardType.Points:
                     return Format(ResolveCardPointAmount(normalizedLevel));
                 default:
                     return string.Empty;
@@ -116,21 +100,6 @@ namespace Vertigo.WheelOfFortune.Rewards.Data
         private static int ResolveSilverAmountLevel(int level)
         {
             return level == 1 ? 5 : level;
-        }
-
-        private static WheelRewardAmountType ResolveDefaultAmountType(WheelRewardType rewardType)
-        {
-            switch (rewardType)
-            {
-                case WheelRewardType.Points:
-                    return WheelRewardAmountType.Points;
-                case WheelRewardType.Cards:
-                    return WheelRewardAmountType.Cards;
-                case WheelRewardType.Currency:
-                    return WheelRewardAmountType.Cash;
-                default:
-                    return WheelRewardAmountType.None;
-            }
         }
 
         private static string Format(int amount)

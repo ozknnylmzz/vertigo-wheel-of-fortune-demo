@@ -28,6 +28,8 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
         [Header("Slice Views")]
         [SerializeField] private List<SpinCenterSliceView> ui_wheel_slice_views = new List<SpinCenterSliceView>();
 
+        public int SliceViewCount => ui_wheel_slice_views.Count;
+
         private void OnValidate()
         {
             AutoAssignMainReferences();

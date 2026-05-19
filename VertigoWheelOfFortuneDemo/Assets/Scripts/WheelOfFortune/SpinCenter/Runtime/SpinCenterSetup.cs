@@ -96,7 +96,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
                 return;
             }
 
-            SpinCenterTierVisualData visualData = spinCenterConfig.ResolveByLevelOrThrow(levelValue);
+            SpinCenterTierVisualData visualData = spinCenterConfig.GenerateSlicesForLevel(levelValue, spinCenterView.SliceViewCount);
             ResolveSliceAmounts(visualData, levelValue);
             spinCenterView.gameObject.SetActive(true);
             spinCenterView.ApplyVisualData(visualData);
@@ -127,7 +127,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
                 if (sliceData != null)
                 {
                     sliceData.selectedRewardAmountValue =
-                        WheelRewardAmountResolver.Resolve(level, sliceData.rewardType, sliceData.rewardAmountType);
+                        WheelRewardAmountResolver.Resolve(level, sliceData.rewardType);
                 }
             }
         }

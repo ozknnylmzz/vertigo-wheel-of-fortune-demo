@@ -56,7 +56,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 return;
             }
 
-            if (rewardData.rewardType == WheelRewardType.Bomb)
+            if (rewardData.rewardType == WheelRewardType.None || rewardData.rewardType == WheelRewardType.Bomb)
             {
                 return;
             }

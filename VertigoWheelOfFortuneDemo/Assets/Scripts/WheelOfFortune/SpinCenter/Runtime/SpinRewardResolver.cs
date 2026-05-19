@@ -76,7 +76,10 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
                 return null;
             }
 
-            return spinCenterConfig.ResolveByLevelOrThrow(WheelGameEventBus.LastKnownLevel);
+            SpinCenterTierVisualData tierData = spinCenterConfig.ResolveByLevelOrThrow(WheelGameEventBus.LastKnownLevel);
+            return tierData.slices != null && tierData.slices.Count > 0
+                ? tierData
+                : spinCenterConfig.GenerateSlicesForLevel(WheelGameEventBus.LastKnownLevel);
         }
 
         private static int ResolveSliceIndex(float stopAngle, int sliceCount)
@@ -92,10 +95,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         {
             return !string.IsNullOrWhiteSpace(rewardData.selectedRewardAmountValue)
                 ? rewardData.selectedRewardAmountValue
-                : WheelRewardAmountResolver.Resolve(
-                    WheelGameEventBus.LastKnownLevel,
-                    rewardData.rewardType,
-                    rewardData.rewardAmountType);
+                : WheelRewardAmountResolver.Resolve(WheelGameEventBus.LastKnownLevel, rewardData.rewardType);
         }
         #endregion
     }
