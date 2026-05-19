@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.UI;
 using Vertigo.WheelOfFortune.GameFlow.Runtime;
 using Vertigo.WheelOfFortune.Rewards.Data;
 using Vertigo.WheelOfFortune.Rewards.UI;
@@ -12,6 +13,8 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
         #region Inspector Fields
         [SerializeField] private RectTransform ui_container_rewards_list;
         [SerializeField] private RewardListItemView rewardItemPrefab;
+        [SerializeField] private RectTransform rewardAnimationStartPoint;
+        [SerializeField] private RewardFlyGroupController rewardFlyGroupController;
         #endregion
 
         #region Runtime State
@@ -61,21 +64,60 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 return;
             }
 
-            string rewardKey = ResolveRewardKey(rewardData);
-            if (!rewardItems.TryGetValue(rewardKey, out RewardItemState itemState))
+            int rewardAmount = ParseRewardAmount(rewardData.rewardAmountValue);
+            RewardItemState itemState = PrepareRewardItem(rewardData);
+            if (rewardFlyGroupController != null && rewardAnimationStartPoint != null)
             {
-                itemState = new RewardItemState(Instantiate(rewardItemPrefab, ui_container_rewards_list), rewardData.rewardType);
-                itemState.ItemView.transform.SetSiblingIndex(ResolveSiblingIndex(rewardData.rewardType));
-                rewardItems.Add(rewardKey, itemState);
+                rewardFlyGroupController.Play(
+                    rewardData.rewardIcon,
+                    rewardAnimationStartPoint,
+                    itemState.ItemView.RectTransform,
+                    rewardAmount,
+                    amountStep => AddRewardAmount(itemState, amountStep));
+                return;
             }
 
-            itemState.AmountValue += ParseRewardAmount(rewardData.rewardAmountValue);
-            itemState.AmountPrefix = ResolveRewardAmountPrefix(rewardData.rewardAmountValue);
-            itemState.ItemView.Apply(rewardData.rewardIcon, FormatRewardAmount(itemState.AmountValue, itemState.AmountPrefix));
+            AddRewardAmount(itemState, rewardAmount);
         }
         #endregion
 
         #region Reward Helpers
+        private RewardItemState PrepareRewardItem(WheelRewardData rewardData)
+        {
+            string rewardKey = ResolveRewardKey(rewardData);
+            string amountPrefix = ResolveRewardAmountPrefix(rewardData.rewardAmountValue);
+            if (!rewardItems.TryGetValue(rewardKey, out RewardItemState itemState))
+            {
+                itemState = new RewardItemState(Instantiate(rewardItemPrefab, ui_container_rewards_list), rewardData.rewardType);
+                itemState.AmountPrefix = amountPrefix;
+                itemState.ItemView.Apply(rewardData.rewardIcon, FormatRewardAmount(0, itemState.AmountPrefix));
+                itemState.ItemView.transform.SetSiblingIndex(ResolveSiblingIndex(rewardData.rewardType));
+                rewardItems.Add(rewardKey, itemState);
+            }
+            else
+            {
+                itemState.AmountPrefix = amountPrefix;
+                itemState.ItemView.SetIcon(rewardData.rewardIcon);
+            }
+
+            Canvas.ForceUpdateCanvases();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(ui_container_rewards_list);
+            Canvas.ForceUpdateCanvases();
+
+            return itemState;
+        }
+
+        private void AddRewardAmount(RewardItemState itemState, int amount)
+        {
+            if (itemState == null || amount <= 0)
+            {
+                return;
+            }
+
+            itemState.AmountValue += amount;
+            itemState.ItemView.SetAmount(FormatRewardAmount(itemState.AmountValue, itemState.AmountPrefix));
+        }
+
         private static string ResolveRewardKey(WheelRewardData rewardData)
         {
             string rewardTypeKey = ((int)rewardData.rewardType).ToString(CultureInfo.InvariantCulture);
@@ -120,16 +162,34 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
 
         private int ResolveSiblingIndex(WheelRewardType rewardType)
         {
+            int rewardOrder = ResolveRewardOrder(rewardType);
             int siblingIndex = 0;
             foreach (RewardItemState itemState in rewardItems.Values)
             {
-                if (itemState.RewardType <= rewardType)
+                if (ResolveRewardOrder(itemState.RewardType) <= rewardOrder)
                 {
                     siblingIndex++;
                 }
             }
 
             return siblingIndex;
+        }
+
+        private static int ResolveRewardOrder(WheelRewardType rewardType)
+        {
+            switch (rewardType)
+            {
+                case WheelRewardType.Gold:
+                    return 0;
+                case WheelRewardType.Cash:
+                    return 1;
+                case WheelRewardType.Points:
+                    return 2;
+                case WheelRewardType.Cards:
+                    return 3;
+                default:
+                    return 99;
+            }
         }
         #endregion
 

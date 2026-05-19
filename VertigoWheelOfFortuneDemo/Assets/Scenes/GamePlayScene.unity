@@ -417,7 +417,7 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 124682640256026416, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
+    - target: {fileID: 685413423500277363, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -505,7 +505,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: ui_canvas_root
       objectReference: {fileID: 0}
-    - target: {fileID: 6145138647710957540, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
+    - target: {fileID: 4215717694487399686, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5517678135795233954, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7741657564352329004, guid: aee65b2ad3925451384e7f3db2c52cb9, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
