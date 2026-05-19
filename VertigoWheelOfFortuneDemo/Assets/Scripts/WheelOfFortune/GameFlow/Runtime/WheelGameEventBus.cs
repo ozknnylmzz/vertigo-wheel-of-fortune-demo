@@ -1,4 +1,5 @@
 using System;
+using Vertigo.WheelOfFortune.Rewards.Runtime;
 
 namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 {
@@ -14,6 +15,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         public static event Action<int> LevelChanged;
         public static event Action<int> RoundChanged;
         public static event Action<WheelGameState> GameStateChanged;
+        public static event Action<WheelRewardData> RewardWon;
         #endregion
 
         #region Last Known State
@@ -49,6 +51,11 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         {
             LastKnownGameState = state;
             GameStateChanged?.Invoke(state);
+        }
+
+        public static void PublishRewardWon(WheelRewardData rewardData)
+        {
+            RewardWon?.Invoke(rewardData);
         }
         #endregion
     }
