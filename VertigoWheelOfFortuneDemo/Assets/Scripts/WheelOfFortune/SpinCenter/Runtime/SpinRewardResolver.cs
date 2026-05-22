@@ -45,7 +45,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             SpinCenterTierVisualData tierData = ResolveTierData();
             if (tierData == null || tierData.slices == null || tierData.slices.Count == 0)
             {
-                WheelGameEventBus.PublishRewardCollectionCompleted();
+                CompleteRewardCollection();
                 return;
             }
 
@@ -53,13 +53,13 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             SpinCenterSliceVisualData rewardData = tierData.slices[sliceIndex];
             if (rewardData == null)
             {
-                WheelGameEventBus.PublishRewardCollectionCompleted();
+                CompleteRewardCollection();
                 return;
             }
 
             if (rewardData.rewardType == WheelRewardType.Bomb)
             {
-                WheelGameEventBus.PublishBombHit();
+                WheelGameFlowManager.Instance?.HitBomb();
                 return;
             }
 
@@ -70,7 +70,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
 
             if (!rewardHandled)
             {
-                WheelGameEventBus.PublishRewardCollectionCompleted();
+                CompleteRewardCollection();
             }
         }
         #endregion
@@ -83,10 +83,11 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
                 return null;
             }
 
-            SpinCenterTierVisualData tierData = spinCenterConfig.ResolveByLevelOrThrow(WheelGameEventBus.LastKnownLevel);
+            int level = ResolveCurrentLevel();
+            SpinCenterTierVisualData tierData = spinCenterConfig.ResolveByLevelOrThrow(level);
             return tierData.slices != null && tierData.slices.Count > 0
                 ? tierData
-                : spinCenterConfig.GenerateSlicesForLevel(WheelGameEventBus.LastKnownLevel);
+                : spinCenterConfig.GenerateSlicesForLevel(level);
         }
 
         private static int ResolveSliceIndex(float stopAngle, int sliceCount)
@@ -102,7 +103,17 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         {
             return !string.IsNullOrWhiteSpace(rewardData.selectedRewardAmountValue)
                 ? rewardData.selectedRewardAmountValue
-                : WheelRewardAmountResolver.Resolve(WheelGameEventBus.LastKnownLevel, rewardData.rewardType);
+                : WheelRewardAmountResolver.Resolve(ResolveCurrentLevel(), rewardData.rewardType);
+        }
+
+        private static int ResolveCurrentLevel()
+        {
+            return WheelGameFlowManager.Instance != null ? WheelGameFlowManager.Instance.CurrentLevel : 1;
+        }
+
+        private static void CompleteRewardCollection()
+        {
+            WheelGameFlowManager.Instance?.CompleteRewardCollection();
         }
         #endregion
     }

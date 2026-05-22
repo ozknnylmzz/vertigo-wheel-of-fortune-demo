@@ -39,15 +39,20 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
                 return;
             }
 
-            WheelGameEventBus.LevelChanged += HandleLevelChanged;
-            HandleLevelChanged(WheelGameEventBus.LastKnownLevel);
+            if (WheelGameFlowManager.Instance == null)
+            {
+                return;
+            }
+
+            WheelGameFlowManager.Instance.LevelChanged += HandleLevelChanged;
+            HandleLevelChanged(WheelGameFlowManager.Instance.CurrentLevel);
         }
 
         private void OnDisable()
         {
-            if (Application.isPlaying)
+            if (Application.isPlaying && WheelGameFlowManager.Instance != null)
             {
-                WheelGameEventBus.LevelChanged -= HandleLevelChanged;
+                WheelGameFlowManager.Instance.LevelChanged -= HandleLevelChanged;
             }
 
 #if UNITY_EDITOR

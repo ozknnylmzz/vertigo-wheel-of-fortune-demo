@@ -70,14 +70,17 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
                 TryAutoAssignZoneValueTexts();
             }
 #endif
-            ApplyZoneTexts(WheelGameEventBus.LastKnownRound);
+            ApplyZoneTexts(ResolveCurrentRound());
 
             if (!Application.isPlaying)
             {
                 return;
             }
 
-            WheelGameEventBus.RoundChanged += HandleRoundChanged;
+            if (WheelGameFlowManager.Instance != null)
+            {
+                WheelGameFlowManager.Instance.RoundChanged += HandleRoundChanged;
+            }
         }
 
         private void OnDisable()
@@ -87,7 +90,10 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
                 return;
             }
 
-            WheelGameEventBus.RoundChanged -= HandleRoundChanged;
+            if (WheelGameFlowManager.Instance != null)
+            {
+                WheelGameFlowManager.Instance.RoundChanged -= HandleRoundChanged;
+            }
         }
         #endregion
 
@@ -101,24 +107,25 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         #region Visuals
         private void ApplyZoneTexts(int roundValue)
         {
-            if (roundValue > WheelGameEventBus.MaxRoundValue)
+            if (roundValue > WheelGameFlowManager.MaxRoundValue)
             {
                 return;
             }
 
-            int normalizedRound = Mathf.Clamp(roundValue, 0, WheelGameEventBus.MaxRoundValue);
+            int normalizedRound = Mathf.Clamp(roundValue, 0, WheelGameFlowManager.MaxRoundValue);
             int safeInterval = Mathf.Max(1, safeZoneInterval);
             int superInterval = Mathf.Max(1, superZoneInterval);
+            int maxSafeRound = Mathf.Max(safeInterval, WheelGameFlowManager.MaxRoundValue - safeInterval);
 
             int nextSafeRound = ((normalizedRound / safeInterval) + 1) * safeInterval;
-            if (nextSafeRound < WheelGameEventBus.MaxRoundValue && nextSafeRound % superInterval == 0)
+            if (nextSafeRound < WheelGameFlowManager.MaxRoundValue && nextSafeRound % superInterval == 0)
             {
                 nextSafeRound += safeInterval;
             }
 
             int nextSuperRound = ((normalizedRound / superInterval) + 1) * superInterval;
-            nextSafeRound = Mathf.Min(nextSafeRound, WheelGameEventBus.MaxRoundValue);
-            nextSuperRound = Mathf.Min(nextSuperRound, WheelGameEventBus.MaxRoundValue);
+            nextSafeRound = Mathf.Min(nextSafeRound, maxSafeRound);
+            nextSuperRound = Mathf.Min(nextSuperRound, WheelGameFlowManager.MaxRoundValue);
 
             if (ui_text_zone_safe_value != null)
             {
@@ -129,6 +136,11 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             {
                 ui_text_zone_super_value.text = nextSuperRound.ToString();
             }
+        }
+
+        private static int ResolveCurrentRound()
+        {
+            return WheelGameFlowManager.Instance != null ? WheelGameFlowManager.Instance.CurrentRound : 1;
         }
         #endregion
     }

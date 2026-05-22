@@ -38,6 +38,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             }
 
             WheelGameEventBus.RewardWon += HandleRewardWon;
+            WheelGameEventBus.RewardsResetRequested += ResetRewards;
         }
 
         private void OnDisable()
@@ -48,6 +49,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             }
 
             WheelGameEventBus.RewardWon -= HandleRewardWon;
+            WheelGameEventBus.RewardsResetRequested -= ResetRewards;
         }
         #endregion
 
@@ -56,13 +58,13 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
         {
             if (ui_container_rewards_list == null || rewardItemPrefab == null)
             {
-                WheelGameEventBus.PublishRewardCollectionCompleted();
+                CompleteRewardCollection();
                 return;
             }
 
             if (rewardData.rewardType == WheelRewardType.None || rewardData.rewardType == WheelRewardType.Bomb)
             {
-                WheelGameEventBus.PublishRewardCollectionCompleted();
+                CompleteRewardCollection();
                 return;
             }
 
@@ -76,12 +78,12 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                     itemState.ItemView.RectTransform,
                     rewardAmount,
                     amountStep => AddRewardAmount(itemState, amountStep),
-                    WheelGameEventBus.PublishRewardCollectionCompleted);
+                    CompleteRewardCollection);
                 return;
             }
 
             AddRewardAmount(itemState, rewardAmount);
-            WheelGameEventBus.PublishRewardCollectionCompleted();
+            CompleteRewardCollection();
         }
         #endregion
 
@@ -194,6 +196,24 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 default:
                     return 99;
             }
+        }
+
+        private static void CompleteRewardCollection()
+        {
+            WheelGameFlowManager.Instance?.CompleteRewardCollection();
+        }
+
+        private void ResetRewards()
+        {
+            foreach (RewardItemState itemState in rewardItems.Values)
+            {
+                if (itemState.ItemView != null)
+                {
+                    Destroy(itemState.ItemView.gameObject);
+                }
+            }
+
+            rewardItems.Clear();
         }
         #endregion
 

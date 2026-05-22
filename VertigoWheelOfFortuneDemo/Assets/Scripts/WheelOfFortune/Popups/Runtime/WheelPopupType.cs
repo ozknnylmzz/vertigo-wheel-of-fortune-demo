@@ -4,7 +4,8 @@ namespace Vertigo.WheelOfFortune.Popups.Runtime
     {
         BombResult = 0,
         WinResult = 1,
-        ExitConfirm = 2,
-        StageReward = 3
+        CashOutConfirm = 2,
+        StageReward = 3,
+        ExitGameConfirm = 4
     }
 }

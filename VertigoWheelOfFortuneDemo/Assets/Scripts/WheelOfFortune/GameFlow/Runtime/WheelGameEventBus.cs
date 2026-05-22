@@ -5,55 +5,19 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 {
     public static class WheelGameEventBus
     {
-        #region Constants
-        public const int MaxRoundValue = 60;
-        #endregion
-
         #region Events
-        public static event Action SpinStarted;
         public static event Action<float> SpinCompleted;
-        public static event Action<int> LevelChanged;
-        public static event Action<int> RoundChanged;
-        public static event Action<WheelGameState> GameStateChanged;
         public static event Action<WheelRewardData> RewardWon;
-        public static event Action RewardCollectionCompleted;
-        public static event Action ExitConfirmRequested;
-        public static event Action BombHit;
-        #endregion
-
-        #region Last Known State
-        public static int LastKnownLevel { get; private set; } = 1;
-        public static int LastKnownRound { get; private set; } = 1;
-        public static WheelGameState LastKnownGameState { get; private set; } = WheelGameState.Idle;
+        public static event Action RewardsResetRequested;
+        public static event Action CashOutConfirmRequested;
+        public static event Action ExitGameConfirmRequested;
+        public static event Action<int> StageRewardPopupRequested;
         #endregion
 
         #region Publishers
-        public static void PublishSpinStarted()
-        {
-            SpinStarted?.Invoke();
-        }
-
         public static void PublishSpinCompleted(float stopAngle)
         {
             SpinCompleted?.Invoke(stopAngle);
-        }
-
-        public static void PublishLevelChanged(int levelValue)
-        {
-            LastKnownLevel = levelValue < 1 ? 1 : levelValue;
-            LevelChanged?.Invoke(LastKnownLevel);
-        }
-
-        public static void PublishRoundChanged(int roundValue)
-        {
-            LastKnownRound = Math.Min(MaxRoundValue, Math.Max(1, roundValue));
-            RoundChanged?.Invoke(LastKnownRound);
-        }
-
-        public static void PublishGameStateChanged(WheelGameState state)
-        {
-            LastKnownGameState = state;
-            GameStateChanged?.Invoke(state);
         }
 
         public static bool PublishRewardWon(WheelRewardData rewardData)
@@ -67,19 +31,30 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
             return true;
         }
 
-        public static void PublishRewardCollectionCompleted()
+        public static void PublishCashOutConfirmRequested()
         {
-            RewardCollectionCompleted?.Invoke();
+            CashOutConfirmRequested?.Invoke();
         }
 
-        public static void PublishBombHit()
+        public static void PublishExitGameConfirmRequested()
         {
-            BombHit?.Invoke();
+            ExitGameConfirmRequested?.Invoke();
         }
 
-        public static void PublishExitConfirmRequested()
+        public static bool PublishStageRewardPopupRequested(int level)
         {
-            ExitConfirmRequested?.Invoke();
+            if (StageRewardPopupRequested == null)
+            {
+                return false;
+            }
+
+            StageRewardPopupRequested.Invoke(level);
+            return true;
+        }
+
+        public static void PublishRewardsResetRequested()
+        {
+            RewardsResetRequested?.Invoke();
         }
         #endregion
     }

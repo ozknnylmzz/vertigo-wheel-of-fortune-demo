@@ -34,13 +34,21 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         private void OnEnable()
         {
             SubscribeButton();
-            WheelGameEventBus.GameStateChanged += HandleGameStateChanged;
+            if (WheelGameFlowManager.Instance != null)
+            {
+                WheelGameFlowManager.Instance.GameStateChanged += HandleGameStateChanged;
+            }
+
             SetButtonInteractable(CanStartSpin());
         }
 
         private void OnDisable()
         {
-            WheelGameEventBus.GameStateChanged -= HandleGameStateChanged;
+            if (WheelGameFlowManager.Instance != null)
+            {
+                WheelGameFlowManager.Instance.GameStateChanged -= HandleGameStateChanged;
+            }
+
             UnsubscribeButton();
             StopSpinIfRunning();
             SetButtonInteractable(true);
@@ -73,7 +81,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             IsSpinning = true;
             SetButtonInteractable(false);
             SpinStarted?.Invoke();
-            WheelGameEventBus.PublishSpinStarted();
+            WheelGameFlowManager.Instance.BeginSpin();
 
             int turns = UnityEngine.Random.Range(GetMinSpinTurns(), GetMaxSpinTurns() + 1);
             float extraAngle = UnityEngine.Random.Range(GetMinExtraStopAngle(), GetMaxExtraStopAngle());
@@ -192,14 +200,16 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         {
             return !IsSpinning &&
                    ui_transform_wheel_animator != null &&
-                   WheelGameEventBus.LastKnownGameState != WheelGameState.Spinning &&
+                   WheelGameFlowManager.Instance != null &&
+                   WheelGameFlowManager.Instance.CurrentState != WheelGameState.Spinning &&
                    !IsMaxRoundReached();
         }
 
         private static bool IsMaxRoundReached()
         {
-            return WheelGameEventBus.LastKnownRound >= WheelGameEventBus.MaxRoundValue ||
-                   WheelGameEventBus.LastKnownGameState == WheelGameState.Win;
+            WheelGameFlowManager flowManager = WheelGameFlowManager.Instance;
+            return flowManager == null ||
+                   flowManager.CurrentState == WheelGameState.Win;
         }
 
         private float GetSpinDurationSeconds()

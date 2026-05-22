@@ -10,6 +10,10 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
         [SerializeField] private Button ui_button_exit;
         #endregion
 
+        #region Runtime State
+        private bool isGameFlowSubscribed;
+        #endregion
+
         #region Unity Lifecycle
         private void OnEnable()
         {
@@ -20,8 +24,15 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 return;
             }
 
-            WheelGameEventBus.GameStateChanged += HandleGameStateChanged;
-            ApplyExitButtonVisibility(WheelGameEventBus.LastKnownGameState);
+            TrySubscribeGameFlow();
+        }
+
+        private void Start()
+        {
+            if (Application.isPlaying)
+            {
+                TrySubscribeGameFlow();
+            }
         }
 
         private void OnDisable()
@@ -34,7 +45,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 return;
             }
 
-            WheelGameEventBus.GameStateChanged -= HandleGameStateChanged;
+            TryUnsubscribeGameFlow();
         }
         #endregion
 
@@ -46,7 +57,13 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
 
         private void HandleExitButtonClicked()
         {
-            WheelGameEventBus.PublishExitConfirmRequested();
+            if (WheelGameFlowManager.Instance != null && WheelGameFlowManager.Instance.CurrentLevel <= 1)
+            {
+                WheelGameEventBus.PublishExitGameConfirmRequested();
+                return;
+            }
+
+            WheelGameEventBus.PublishCashOutConfirmRequested();
         }
         #endregion
 
@@ -70,6 +87,30 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             }
 
             ui_button_exit.onClick.RemoveListener(HandleExitButtonClicked);
+        }
+
+        private void TrySubscribeGameFlow()
+        {
+            if (isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
+            {
+                return;
+            }
+
+            WheelGameFlowManager.Instance.GameStateChanged += HandleGameStateChanged;
+            ApplyExitButtonVisibility(WheelGameFlowManager.Instance.CurrentState);
+            isGameFlowSubscribed = true;
+        }
+
+        private void TryUnsubscribeGameFlow()
+        {
+            if (!isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
+            {
+                isGameFlowSubscribed = false;
+                return;
+            }
+
+            WheelGameFlowManager.Instance.GameStateChanged -= HandleGameStateChanged;
+            isGameFlowSubscribed = false;
         }
 
         private void ApplyExitButtonVisibility(WheelGameState gameState)

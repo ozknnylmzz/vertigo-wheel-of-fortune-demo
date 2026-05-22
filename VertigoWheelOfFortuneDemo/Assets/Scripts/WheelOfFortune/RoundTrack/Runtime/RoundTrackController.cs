@@ -53,17 +53,20 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
                 return;
             }
 
-            InitializeTrack(WheelGameEventBus.LastKnownRound);
-            WheelGameEventBus.RoundChanged += HandleRoundChanged;
-            WheelGameEventBus.LevelChanged += HandleLevelChanged;
+            InitializeTrack(ResolveCurrentRound());
+            if (WheelGameFlowManager.Instance != null)
+            {
+                WheelGameFlowManager.Instance.RoundChanged += HandleRoundChanged;
+                WheelGameFlowManager.Instance.LevelChanged += HandleLevelChanged;
+            }
         }
 
         private void OnDisable()
         {
-            if (Application.isPlaying)
+            if (Application.isPlaying && WheelGameFlowManager.Instance != null)
             {
-                WheelGameEventBus.RoundChanged -= HandleRoundChanged;
-                WheelGameEventBus.LevelChanged -= HandleLevelChanged;
+                WheelGameFlowManager.Instance.RoundChanged -= HandleRoundChanged;
+                WheelGameFlowManager.Instance.LevelChanged -= HandleLevelChanged;
             }
 
             if (shiftSequence != null)
@@ -79,14 +82,14 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         private void OnValidate()
         {
             RefreshEditorBindings();
-            InitializeTrack(WheelGameEventBus.LastKnownRound);
+            InitializeTrack(ResolveCurrentRound());
         }
 
         [ContextMenu("Refresh Round Track Editor References")]
         private void RefreshRoundTrackEditorReferences()
         {
             RefreshEditorBindings();
-            InitializeTrack(WheelGameEventBus.LastKnownRound);
+            InitializeTrack(ResolveCurrentRound());
         }
 
         private void RefreshEditorBindings()
@@ -129,9 +132,15 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         #region Event Handlers
         private void HandleRoundChanged(int roundValue)
         {
-            int normalizedRound = Mathf.Clamp(roundValue, 1, WheelGameEventBus.MaxRoundValue);
+            int normalizedRound = Mathf.Clamp(roundValue, 1, WheelGameFlowManager.MaxRoundValue);
             if (normalizedRound == currentRoundValue)
             {
+                return;
+            }
+
+            if (normalizedRound < currentRoundValue)
+            {
+                InitializeTrack(normalizedRound);
                 return;
             }
 
@@ -162,7 +171,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             highlightedSlotBinding = null;
 
             int centerIndex = ResolveCenterIndex();
-            int normalizedRound = Mathf.Clamp(currentRound, 1, WheelGameEventBus.MaxRoundValue);
+            int normalizedRound = Mathf.Clamp(currentRound, 1, WheelGameFlowManager.MaxRoundValue);
             currentRoundValue = normalizedRound;
 
             for (int i = 0; i < slotBindings.Count; i++)
@@ -172,7 +181,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             }
 
             initialized = true;
-            ApplyCurrentSlotTextColor(WheelGameEventBus.LastKnownLevel, false);
+            ApplyCurrentSlotTextColor(ResolveCurrentLevel(), false);
         }
 
         private void BuildBindingsFromSerializedReferences()
@@ -324,7 +333,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
 
         private string ResolveSlotText(int roundValue)
         {
-            if (roundValue < 1 || roundValue > WheelGameEventBus.MaxRoundValue)
+            if (roundValue < 1 || roundValue > WheelGameFlowManager.MaxRoundValue)
             {
                 return string.Empty;
             }
@@ -421,6 +430,16 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             }
 
             return roundTrackTopSettings.NormalCurrentSlotTextColor;
+        }
+
+        private static int ResolveCurrentRound()
+        {
+            return WheelGameFlowManager.Instance != null ? WheelGameFlowManager.Instance.CurrentRound : 1;
+        }
+
+        private static int ResolveCurrentLevel()
+        {
+            return WheelGameFlowManager.Instance != null ? WheelGameFlowManager.Instance.CurrentLevel : 1;
         }
         #endregion
 

@@ -13,11 +13,19 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
     public sealed class WheelGameFlowManager : MonoBehaviour
     {
+        #region Constants
+        public const int MaxRoundValue = 60;
+        #endregion
+
         #region Inspector Fields
         [SerializeField] [Min(1)] private int level_value = 1;
         [SerializeField] [Min(1)] private int round_value = 1;
         [SerializeField] [Min(1)] private int max_level_value = 60;
         [SerializeField] private WheelGameState game_state = WheelGameState.Idle;
+        #endregion
+
+        #region Singleton
+        public static WheelGameFlowManager Instance { get; private set; }
         #endregion
 
         #region Properties
@@ -33,11 +41,22 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         #endregion
 
         #region Unity Lifecycle
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Debug.LogWarning("Multiple WheelGameFlowManager instances found. Keeping the first instance.", this);
+                return;
+            }
+
+            Instance = this;
+        }
+
         private void OnValidate()
         {
             max_level_value = Mathf.Max(1, max_level_value);
             level_value = Mathf.Clamp(level_value, 1, max_level_value);
-            round_value = Mathf.Clamp(round_value, 1, WheelGameEventBus.MaxRoundValue);
+            round_value = Mathf.Clamp(round_value, 1, MaxRoundValue);
         }
 
         private void OnEnable()
@@ -47,24 +66,20 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
                 return;
             }
 
-            WheelGameEventBus.SpinStarted += HandleSpinStarted;
-            WheelGameEventBus.RewardCollectionCompleted += HandleRewardCollectionCompleted;
-            WheelGameEventBus.BombHit += HandleBombHit;
-            WheelGameEventBus.PublishLevelChanged(level_value);
-            WheelGameEventBus.PublishRoundChanged(round_value);
-            WheelGameEventBus.PublishGameStateChanged(game_state);
-        }
-
-        private void OnDisable()
-        {
-            if (!Application.isPlaying)
+            if (Instance != this)
             {
                 return;
             }
 
-            WheelGameEventBus.SpinStarted -= HandleSpinStarted;
-            WheelGameEventBus.RewardCollectionCompleted -= HandleRewardCollectionCompleted;
-            WheelGameEventBus.BombHit -= HandleBombHit;
+            PublishCurrentState();
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
         }
         #endregion
 
@@ -79,7 +94,6 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
             level_value = normalizedLevel;
             LevelChanged?.Invoke(level_value);
-            WheelGameEventBus.PublishLevelChanged(level_value);
         }
 
         public int IncrementLevel()
@@ -92,13 +106,12 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
             level_value = updatedLevel;
             LevelChanged?.Invoke(level_value);
-            WheelGameEventBus.PublishLevelChanged(level_value);
             return level_value;
         }
 
         public void SetRound(int round)
         {
-            int normalizedRound = Mathf.Clamp(round, 1, WheelGameEventBus.MaxRoundValue);
+            int normalizedRound = Mathf.Clamp(round, 1, MaxRoundValue);
             if (normalizedRound == round_value)
             {
                 return;
@@ -106,12 +119,11 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
             round_value = normalizedRound;
             RoundChanged?.Invoke(round_value);
-            WheelGameEventBus.PublishRoundChanged(round_value);
         }
 
         public int IncrementRound()
         {
-            int updatedRound = Mathf.Min(round_value + 1, WheelGameEventBus.MaxRoundValue);
+            int updatedRound = Mathf.Min(round_value + 1, MaxRoundValue);
             if (updatedRound == round_value)
             {
                 return round_value;
@@ -119,7 +131,6 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
             round_value = updatedRound;
             RoundChanged?.Invoke(round_value);
-            WheelGameEventBus.PublishRoundChanged(round_value);
             return round_value;
         }
 
@@ -132,7 +143,52 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
             game_state = state;
             GameStateChanged?.Invoke(game_state);
-            WheelGameEventBus.PublishGameStateChanged(game_state);
+        }
+
+        public void BeginSpin()
+        {
+            if (game_state == WheelGameState.Win)
+            {
+                return;
+            }
+
+            SetGameState(WheelGameState.Spinning);
+        }
+
+        public void CompleteRewardCollection()
+        {
+            if (game_state != WheelGameState.Spinning)
+            {
+                return;
+            }
+
+            if (round_value >= MaxRoundValue)
+            {
+                CompleteSpinResult();
+                return;
+            }
+
+            IncrementRound();
+            IncrementLevel();
+            if (IsStageRewardLevel(level_value) && WheelGameEventBus.PublishStageRewardPopupRequested(level_value))
+            {
+                return;
+            }
+
+            CompleteSpinResult();
+        }
+
+        public void CompleteStageReward()
+        {
+            if (game_state == WheelGameState.Spinning)
+            {
+                SetGameState(WheelGameState.Idle);
+            }
+        }
+
+        public void HitBomb()
+        {
+            SetGameState(WheelGameState.Lose);
         }
 
         public void ContinueAfterBomb()
@@ -142,35 +198,31 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
                 SetGameState(WheelGameState.Idle);
             }
         }
+
+        public void RestartGame()
+        {
+            SetRound(1);
+            SetLevel(1);
+            SetGameState(WheelGameState.Idle);
+        }
         #endregion
 
-        #region Event Bus Handlers
-        private void HandleSpinStarted()
+        #region Helpers
+        private void PublishCurrentState()
         {
-            if (round_value >= WheelGameEventBus.MaxRoundValue)
-            {
-                SetGameState(WheelGameState.Win);
-                return;
-            }
-
-            SetGameState(WheelGameState.Spinning);
+            LevelChanged?.Invoke(level_value);
+            RoundChanged?.Invoke(round_value);
+            GameStateChanged?.Invoke(game_state);
         }
 
-        private void HandleRewardCollectionCompleted()
+        private void CompleteSpinResult()
         {
-            if (game_state != WheelGameState.Spinning || WheelGameEventBus.LastKnownGameState == WheelGameState.Lose)
-            {
-                return;
-            }
-
-            IncrementRound();
-            IncrementLevel();
-            SetGameState(round_value >= WheelGameEventBus.MaxRoundValue ? WheelGameState.Win : WheelGameState.Idle);
+            SetGameState(round_value >= MaxRoundValue ? WheelGameState.Win : WheelGameState.Idle);
         }
 
-        private void HandleBombHit()
+        private static bool IsStageRewardLevel(int level)
         {
-            SetGameState(WheelGameState.Lose);
+            return level == 30 || level == MaxRoundValue;
         }
         #endregion
     }

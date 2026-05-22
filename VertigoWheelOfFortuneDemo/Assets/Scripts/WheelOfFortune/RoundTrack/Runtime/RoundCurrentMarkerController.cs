@@ -17,14 +17,17 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         #region Unity Lifecycle
         private void OnEnable()
         {
-            ApplyVisual(WheelGameEventBus.LastKnownLevel);
+            ApplyVisual(ResolveCurrentLevel());
 
             if (!Application.isPlaying)
             {
                 return;
             }
 
-            WheelGameEventBus.LevelChanged += HandleLevelChanged;
+            if (WheelGameFlowManager.Instance != null)
+            {
+                WheelGameFlowManager.Instance.LevelChanged += HandleLevelChanged;
+            }
         }
 
         private void OnDisable()
@@ -34,7 +37,10 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
                 return;
             }
 
-            WheelGameEventBus.LevelChanged -= HandleLevelChanged;
+            if (WheelGameFlowManager.Instance != null)
+            {
+                WheelGameFlowManager.Instance.LevelChanged -= HandleLevelChanged;
+            }
         }
         #endregion
 
@@ -60,6 +66,11 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             {
                 ui_image_round_current_marker_bg.color = stageVisual.backgroundColor;
             }
+        }
+
+        private static int ResolveCurrentLevel()
+        {
+            return WheelGameFlowManager.Instance != null ? WheelGameFlowManager.Instance.CurrentLevel : 1;
         }
         #endregion
     }

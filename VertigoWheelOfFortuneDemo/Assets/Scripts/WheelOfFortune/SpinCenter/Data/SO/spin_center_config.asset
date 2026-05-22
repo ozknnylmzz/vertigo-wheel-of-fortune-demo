@@ -72,8 +72,8 @@ MonoBehaviour:
       minCount: 0
       maxCount: 2
     - rewardType: 90
-      minCount: 2
-      maxCount: 2
+      minCount: 0
+      maxCount: 0
   silver:
     titleValue: SILVER SPIN
     titleColor: {r: 0.73, g: 0.85, b: 0.95, a: 1}

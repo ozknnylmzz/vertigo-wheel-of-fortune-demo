@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52053cc2a7eb4b04928c2a526c835436, type: 3}
   m_Name: spin_center_spin_settings
   m_EditorClassIdentifier: 
-  spinDurationSeconds: 2.5
+  spinDurationSeconds: 0.1
   minSpinTurns: 4
   maxSpinTurns: 7
   minExtraStopAngle: 0
