@@ -50,10 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28137c9f5a7b4475a18b5a7d4f0b7c58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zoneSettings: {fileID: 11400000, guid: f302c312efb24ef5a4920c276f1b3aba, type: 2}
   ui_text_zone_safe_value: {fileID: 5647049313149732165}
   ui_text_zone_super_value: {fileID: 1263202431121710647}
-  safeZoneInterval: 5
-  superZoneInterval: 30
 --- !u!1 &3721270304243746876
 GameObject:
   m_ObjectHideFlags: 0
