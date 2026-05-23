@@ -474,7 +474,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5326976109941425222}
   - component: {fileID: 5579585386589443709}
-  - component: {fileID: 4083973256481026343}
   - component: {fileID: 4626165501532334918}
   m_Layer: 5
   m_Name: ui_popup_stage_reward
@@ -520,24 +519,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockerSortingOrder: 100
   blockerAlpha: 0.75
-  canvasGroup: {fileID: 4083973256481026343}
   settings: {fileID: 11400000, guid: ad6c51eaf47c64493aa238b9f6f60000, type: 2}
   ui_image_reward_icon: {fileID: 0}
   ui_text_message_value: {fileID: 7849787660759051197}
   ui_text_button_value: {fileID: 1610368684689643055}
   ui_button_claim: {fileID: 8526076434204049193}
---- !u!225 &4083973256481026343
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6178922430348149808}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!223 &4626165501532334918
 Canvas:
   m_ObjectHideFlags: 0

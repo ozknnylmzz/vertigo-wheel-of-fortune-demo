@@ -17,7 +17,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
 
         [Header("Reward Pool")]
         [SerializeField] [Min(1)] private int sliceCount = 15;
-        [SerializeField] private List<SpinCenterSliceVisualData> rewardPool = new List<SpinCenterSliceVisualData>();
+        [SerializeField] private WheelRewardPoolAsset rewardPool;
 
         [Header("Tier Visuals")]
         [SerializeField] private SpinCenterTierVisualData bronze = new SpinCenterTierVisualData();
@@ -285,59 +285,23 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
 
         private bool HasRewardByType(WheelRewardType rewardType)
         {
-            for (int i = 0; i < rewardPool.Count; i++)
-            {
-                SpinCenterSliceVisualData rewardData = rewardPool[i];
-                if (rewardData != null && rewardData.rewardType == rewardType)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return rewardPool != null && rewardPool.HasRewardByType(rewardType);
         }
 
         private bool AddRandomRewardByType(List<SpinCenterSliceVisualData> target, WheelRewardType rewardType)
         {
-            int matchCount = 0;
-            for (int i = 0; i < rewardPool.Count; i++)
-            {
-                SpinCenterSliceVisualData rewardData = rewardPool[i];
-                if (rewardData != null && rewardData.rewardType == rewardType)
-                {
-                    matchCount++;
-                }
-            }
-
-            if (matchCount == 0)
+            if (rewardPool == null || !rewardPool.TryGetRandomRewardByType(rewardType, out WheelRewardPoolEntry rewardData))
             {
                 return false;
             }
 
-            int targetIndex = UnityEngine.Random.Range(0, matchCount);
-            for (int i = 0; i < rewardPool.Count; i++)
+            target.Add(new SpinCenterSliceVisualData
             {
-                SpinCenterSliceVisualData rewardData = rewardPool[i];
-                if (rewardData == null || rewardData.rewardType != rewardType)
-                {
-                    continue;
-                }
+                rewardType = rewardData.RewardType,
+                rewardIcon = rewardData.RewardIcon
+            });
 
-                if (targetIndex == 0)
-                {
-                    target.Add(new SpinCenterSliceVisualData
-                    {
-                        rewardType = rewardData.rewardType,
-                        rewardIcon = rewardData.rewardIcon
-                    });
-
-                    return true;
-                }
-
-                targetIndex--;
-            }
-
-            return false;
+            return true;
         }
 
         private static void Shuffle(List<SpinCenterSliceVisualData> slices)

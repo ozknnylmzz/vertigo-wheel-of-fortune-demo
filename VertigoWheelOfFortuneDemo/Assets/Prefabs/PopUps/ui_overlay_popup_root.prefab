@@ -278,15 +278,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 7109260295122175251, guid: d04045761b2e7455b9dd3dc1a23f3658, type: 3}
-    - {fileID: 4220125137595407654, guid: d04045761b2e7455b9dd3dc1a23f3658, type: 3}
-    - {fileID: 7337046479369185652, guid: d04045761b2e7455b9dd3dc1a23f3658, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2755658838698233165, guid: d04045761b2e7455b9dd3dc1a23f3658, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8975051732885557135}
     - targetCorrespondingSourceObject: {fileID: 2755658838698233165, guid: d04045761b2e7455b9dd3dc1a23f3658, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1600821329663834897}
@@ -296,18 +290,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2755658838698233165, guid: d04045761b2e7455b9dd3dc1a23f3658, type: 3}
   m_PrefabInstance: {fileID: 903429817043817827}
   m_PrefabAsset: {fileID: 0}
---- !u!225 &8975051732885557135
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078124294943971374}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &1600821329663834897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,7 +304,8 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   blockerSortingOrder: 5
   blockerAlpha: 0.75
-  canvasGroup: {fileID: 8975051732885557135}
+  rewardPool: {fileID: 11400000, guid: 8cf649a4a7d24c5cbb8d34d7a3d3d9f1, type: 2}
+  rewardCardTemplate: {fileID: 0}
 --- !u!224 &5929293446234152983 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6827655328158594420, guid: d04045761b2e7455b9dd3dc1a23f3658, type: 3}
@@ -426,9 +409,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4663562119414303245, guid: ff4e23910a7654c3eb3546b846dab967, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4008236789052744222}
-    - targetCorrespondingSourceObject: {fileID: 4663562119414303245, guid: ff4e23910a7654c3eb3546b846dab967, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7113440818008882727}
     - targetCorrespondingSourceObject: {fileID: 4663562119414303245, guid: ff4e23910a7654c3eb3546b846dab967, type: 3}
       insertIndex: -1
@@ -469,18 +449,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4663562119414303245, guid: ff4e23910a7654c3eb3546b846dab967, type: 3}
   m_PrefabInstance: {fileID: 3548740848201635585}
   m_PrefabAsset: {fileID: 0}
---- !u!225 &4008236789052744222
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8180760093459111180}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!223 &7113440818008882727
 Canvas:
   m_ObjectHideFlags: 0
@@ -535,7 +503,6 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   blockerSortingOrder: 3
   blockerAlpha: 0.75
-  canvasGroup: {fileID: 4008236789052744222}
   ui_button_give_up: {fileID: 622424970322976561}
   ui_button_revive: {fileID: 2391687650693615298}
 --- !u!1001 &5536804386341095860
@@ -636,9 +603,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6178922430348149808, guid: 142790ea9f3c1467cb6c58db9c5fc2a5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2057324074822529791}
-    - targetCorrespondingSourceObject: {fileID: 6178922430348149808, guid: 142790ea9f3c1467cb6c58db9c5fc2a5, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 3634624673501042285}
   m_SourcePrefab: {fileID: 100100000, guid: 142790ea9f3c1467cb6c58db9c5fc2a5, type: 3}
 --- !u!224 &377060802749959666 stripped
@@ -651,18 +615,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6178922430348149808, guid: 142790ea9f3c1467cb6c58db9c5fc2a5, type: 3}
   m_PrefabInstance: {fileID: 5536804386341095860}
   m_PrefabAsset: {fileID: 0}
---- !u!225 &2057324074822529791
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831099690443591044}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &3634624673501042285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,7 +629,6 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   blockerSortingOrder: 5
   blockerAlpha: 0.75
-  canvasGroup: {fileID: 2057324074822529791}
   ui_button_collect_rewards: {fileID: 8526076434204049193, guid: 142790ea9f3c1467cb6c58db9c5fc2a5, type: 3}
   ui_button_go_back: {fileID: 3672850241753735124, guid: 142790ea9f3c1467cb6c58db9c5fc2a5, type: 3}
 --- !u!1001 &761100000000000001
@@ -734,9 +685,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6178922430348149808, guid: 643adce98c4f404abd7b6567e60e0d43, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 761100000000000004}
-    - targetCorrespondingSourceObject: {fileID: 6178922430348149808, guid: 643adce98c4f404abd7b6567e60e0d43, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 761100000000000005}
   m_SourcePrefab: {fileID: 100100000, guid: 643adce98c4f404abd7b6567e60e0d43, type: 3}
 --- !u!224 &761100000000000002 stripped
@@ -749,18 +697,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6178922430348149808, guid: 643adce98c4f404abd7b6567e60e0d43, type: 3}
   m_PrefabInstance: {fileID: 761100000000000001}
   m_PrefabAsset: {fileID: 0}
---- !u!225 &761100000000000004
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 761100000000000003}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &761100000000000005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -775,6 +711,5 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   blockerSortingOrder: 5
   blockerAlpha: 0.75
-  canvasGroup: {fileID: 761100000000000004}
   ui_button_exit: {fileID: 8526076434204049193, guid: 643adce98c4f404abd7b6567e60e0d43, type: 3}
   ui_button_go_back: {fileID: 3672850241753735124, guid: 643adce98c4f404abd7b6567e60e0d43, type: 3}

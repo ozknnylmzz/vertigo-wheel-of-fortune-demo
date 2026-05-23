@@ -13,45 +13,7 @@ MonoBehaviour:
   m_Name: spin_center_config
   m_EditorClassIdentifier: 
   sliceCount: 15
-  rewardPool:
-  - rewardType: 0
-    rewardIcon: {fileID: 21300000, guid: 2c83e907688b54cb1a7070e5f4b2b689, type: 3}
-  - rewardType: 30
-    rewardIcon: {fileID: 21300000, guid: 8827839bb4541439e95a77ba33edf9e2, type: 3}
-  - rewardType: 90
-    rewardIcon: {fileID: 21300000, guid: 7a6cc70cf55264edc930d3f65acc5a2e, type: 3}
-  - rewardType: 90
-    rewardIcon: {fileID: 21300000, guid: dfa32647d25534b2c80d5974e0b882b5, type: 3}
-  - rewardType: 10
-    rewardIcon: {fileID: 21300000, guid: 790282e6284534be9b8b7c536f223e39, type: 3}
-  - rewardType: 10
-    rewardIcon: {fileID: 21300000, guid: 2bfb782b80b964da9816fa1522b6096d, type: 3}
-  - rewardType: 10
-    rewardIcon: {fileID: 21300000, guid: 92a19fc0384c746499be529034888f47, type: 3}
-  - rewardType: 10
-    rewardIcon: {fileID: 21300000, guid: 59ff4e4229d504b47b4bd2bd1f3b7035, type: 3}
-  - rewardType: 10
-    rewardIcon: {fileID: 21300000, guid: 6e43811de403342e2abe9501fafaeadd, type: 3}
-  - rewardType: 10
-    rewardIcon: {fileID: 21300000, guid: 1e729eeecd9d14824a3f1f2fd5fc9beb, type: 3}
-  - rewardType: 10
-    rewardIcon: {fileID: 21300000, guid: 3ff938b4776ce4509808b408b67771f1, type: 3}
-  - rewardType: 10
-    rewardIcon: {fileID: 21300000, guid: 875a5a8969c8f4a649b5882a6995d08c, type: 3}
-  - rewardType: 10
-    rewardIcon: {fileID: 21300000, guid: 06959a7c6fda74cf0874132fbdbd6777, type: 3}
-  - rewardType: 20
-    rewardIcon: {fileID: 21300000, guid: 77d05ec87babf4b139ae25120302c6a7, type: 3}
-  - rewardType: 20
-    rewardIcon: {fileID: 21300000, guid: d4293de623a864649b998f86a8b69b36, type: 3}
-  - rewardType: 20
-    rewardIcon: {fileID: 21300000, guid: 37c0ee94c086b4c8f831441b31a733c0, type: 3}
-  - rewardType: 20
-    rewardIcon: {fileID: 21300000, guid: 48c3b1b3f7cba498abaa8a7aca92974e, type: 3}
-  - rewardType: 20
-    rewardIcon: {fileID: 21300000, guid: f433a3742ddd749ac813a95958a15442, type: 3}
-  - rewardType: 20
-    rewardIcon: {fileID: 21300000, guid: 331fc32c30373473bb19c7903e3a26a2, type: 3}
+  rewardPool: {fileID: 11400000, guid: 8cf649a4a7d24c5cbb8d34d7a3d3d9f1, type: 2}
   bronze:
     titleValue: BRONZE SPIN
     titleColor: {r: 0.88, g: 0.6, b: 0.26, a: 1}

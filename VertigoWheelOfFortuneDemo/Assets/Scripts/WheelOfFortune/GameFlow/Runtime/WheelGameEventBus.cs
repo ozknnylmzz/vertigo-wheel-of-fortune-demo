@@ -8,6 +8,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         #region Events
         public static event Action<float> SpinCompleted;
         public static event Action<WheelRewardData> RewardWon;
+        public static event Action<WheelRewardData> RewardWonObserved;
         public static event Action RewardsResetRequested;
         public static event Action CashOutConfirmRequested;
         public static event Action ExitGameConfirmRequested;
@@ -22,13 +23,11 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
         public static bool PublishRewardWon(WheelRewardData rewardData)
         {
-            if (RewardWon == null)
-            {
-                return false;
-            }
+            bool hasRewardHandler = RewardWon != null;
 
             RewardWon?.Invoke(rewardData);
-            return true;
+            RewardWonObserved?.Invoke(rewardData);
+            return hasRewardHandler;
         }
 
         public static void PublishCashOutConfirmRequested()

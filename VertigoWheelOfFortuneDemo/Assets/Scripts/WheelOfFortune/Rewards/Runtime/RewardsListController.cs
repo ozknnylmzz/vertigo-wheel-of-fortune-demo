@@ -68,7 +68,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 return;
             }
 
-            int rewardAmount = ParseRewardAmount(rewardData.rewardAmountValue);
+            int rewardAmount = WheelRewardAmountValueUtility.ParseAmount(rewardData.rewardAmountValue);
             RewardItemState itemState = PrepareRewardItem(rewardData);
             if (rewardFlyGroupController != null && rewardAnimationStartPoint != null)
             {
@@ -91,7 +91,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
         private RewardItemState PrepareRewardItem(WheelRewardData rewardData)
         {
             string rewardKey = ResolveRewardKey(rewardData);
-            string amountPrefix = ResolveRewardAmountPrefix(rewardData.rewardAmountValue);
+            string amountPrefix = WheelRewardAmountValueUtility.ResolveAmountPrefix(rewardData.rewardAmountValue);
             if (!rewardItems.TryGetValue(rewardKey, out RewardItemState itemState))
             {
                 itemState = new RewardItemState(Instantiate(rewardItemPrefab, ui_container_rewards_list), rewardData.rewardType);
@@ -132,38 +132,9 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 : rewardTypeKey;
         }
 
-        private static int ParseRewardAmount(string rewardAmountValue)
-        {
-            if (string.IsNullOrWhiteSpace(rewardAmountValue))
-            {
-                return 0;
-            }
-
-            string digits = string.Empty;
-            for (int i = 0; i < rewardAmountValue.Length; i++)
-            {
-                char c = rewardAmountValue[i];
-                if (c >= '0' && c <= '9')
-                {
-                    digits += c;
-                }
-            }
-
-            return int.TryParse(digits, NumberStyles.Integer, CultureInfo.InvariantCulture, out int amount)
-                ? amount
-                : 0;
-        }
-
-        private static string ResolveRewardAmountPrefix(string rewardAmountValue)
-        {
-            return !string.IsNullOrWhiteSpace(rewardAmountValue) && rewardAmountValue.TrimStart().StartsWith("x")
-                ? "x"
-                : string.Empty;
-        }
-
         private static string FormatRewardAmount(int amount, string amountPrefix)
         {
-            return amountPrefix + amount.ToString("N0", CultureInfo.InvariantCulture);
+            return WheelRewardAmountValueUtility.FormatAmount(amount, amountPrefix);
         }
 
         private int ResolveSiblingIndex(WheelRewardType rewardType)

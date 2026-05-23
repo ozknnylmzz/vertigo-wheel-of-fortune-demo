@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Vertigo.WheelOfFortune.GameFlow.Runtime;
 using Vertigo.WheelOfFortune.Popups.UI;
+using Vertigo.WheelOfFortune.Rewards.Data;
+using Vertigo.WheelOfFortune.Rewards.Runtime;
 
 namespace Vertigo.WheelOfFortune.Popups.Runtime
 {
@@ -20,6 +22,7 @@ namespace Vertigo.WheelOfFortune.Popups.Runtime
 
         #region Runtime State
         private bool isGameFlowSubscribed;
+        private readonly List<WheelRewardData> winResultRewards = new List<WheelRewardData>();
         #endregion
 
         #region Unity Lifecycle
@@ -43,6 +46,8 @@ namespace Vertigo.WheelOfFortune.Popups.Runtime
             WheelGameEventBus.CashOutConfirmRequested += ShowCashOutConfirm;
             WheelGameEventBus.ExitGameConfirmRequested += ShowExitGameConfirm;
             WheelGameEventBus.StageRewardPopupRequested += ShowStageReward;
+            WheelGameEventBus.RewardWonObserved += HandleRewardWonObserved;
+            WheelGameEventBus.RewardsResetRequested += HandleRewardsResetRequested;
             TrySubscribeGameFlow();
         }
 
@@ -66,6 +71,8 @@ namespace Vertigo.WheelOfFortune.Popups.Runtime
             WheelGameEventBus.CashOutConfirmRequested -= ShowCashOutConfirm;
             WheelGameEventBus.ExitGameConfirmRequested -= ShowExitGameConfirm;
             WheelGameEventBus.StageRewardPopupRequested -= ShowStageReward;
+            WheelGameEventBus.RewardWonObserved -= HandleRewardWonObserved;
+            WheelGameEventBus.RewardsResetRequested -= HandleRewardsResetRequested;
             TryUnsubscribeGameFlow();
         }
         #endregion
@@ -125,6 +132,8 @@ namespace Vertigo.WheelOfFortune.Popups.Runtime
 
         public void ShowWinResult()
         {
+            WinResultPopup popup = ResolvePopup(WheelPopupType.WinResult) as WinResultPopup;
+            popup?.Setup(winResultRewards);
             Show(WheelPopupType.WinResult);
         }
 
@@ -181,6 +190,21 @@ namespace Vertigo.WheelOfFortune.Popups.Runtime
             {
                 ShowWinResult();
             }
+        }
+
+        private void HandleRewardWonObserved(WheelRewardData rewardData)
+        {
+            if (rewardData.rewardType == WheelRewardType.None || rewardData.rewardType == WheelRewardType.Bomb)
+            {
+                return;
+            }
+
+            winResultRewards.Add(rewardData);
+        }
+
+        private void HandleRewardsResetRequested()
+        {
+            winResultRewards.Clear();
         }
         #endregion
 
@@ -283,7 +307,7 @@ namespace Vertigo.WheelOfFortune.Popups.Runtime
 
             if (popupBlockerImage != null)
             {
-                Color blockerColor = popupBlockerImage.color;
+                Color blockerColor = popup.BlockerColor;
                 blockerColor.a = popup.BlockerAlpha;
                 popupBlockerImage.color = blockerColor;
             }

@@ -52,7 +52,11 @@ namespace Vertigo.WheelOfFortune.Popups.UI
         private void HandleCollectRewardsButtonClicked()
         {
             RequestClose();
-            WheelGameFlowManager.Instance?.SetGameState(WheelGameState.Win);
+
+            WheelGameFlowManager flowManager = WheelGameFlowManager.Instance;
+            flowManager?.SetGameState(WheelGameState.Win);
+            WheelGameEventBus.PublishRewardsResetRequested();
+            flowManager?.RestartGame();
         }
 
         private void HandleGoBackButtonClicked()

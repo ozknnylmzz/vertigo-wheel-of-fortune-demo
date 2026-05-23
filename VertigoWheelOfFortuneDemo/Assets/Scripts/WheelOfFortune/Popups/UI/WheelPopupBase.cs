@@ -9,15 +9,14 @@ namespace Vertigo.WheelOfFortune.Popups.UI
         #region Inspector Fields
         [Header("Popup Settings")]
         [SerializeField] private int blockerSortingOrder = 100;
+        [SerializeField] [ColorUsage(false)] private Color blockerColor = Color.black;
         [SerializeField] [Range(0f, 1f)] private float blockerAlpha = 0.75f;
-
-        [Header("References")]
-        [SerializeField] private CanvasGroup canvasGroup;
         #endregion
 
         #region Properties
         public abstract WheelPopupType PopupType { get; }
         public int BlockerSortingOrder => blockerSortingOrder;
+        public Color BlockerColor => blockerColor;
         public float BlockerAlpha => blockerAlpha;
         #endregion
 
@@ -27,22 +26,8 @@ namespace Vertigo.WheelOfFortune.Popups.UI
 
         #region Editor
 #if UNITY_EDITOR
-        protected virtual void Reset()
-        {
-            TryAutoAssignReferences();
-        }
-
         protected virtual void OnValidate()
         {
-            TryAutoAssignReferences();
-        }
-
-        private void TryAutoAssignReferences()
-        {
-            if (canvasGroup == null)
-            {
-                canvasGroup = GetComponent<CanvasGroup>();
-            }
         }
 #endif
         #endregion
@@ -51,12 +36,10 @@ namespace Vertigo.WheelOfFortune.Popups.UI
         public virtual void Show()
         {
             gameObject.SetActive(true);
-            SetCanvasState(1f, true);
         }
 
         public virtual void Hide()
         {
-            SetCanvasState(0f, false);
             gameObject.SetActive(false);
         }
         #endregion
@@ -65,18 +48,6 @@ namespace Vertigo.WheelOfFortune.Popups.UI
         protected void RequestClose()
         {
             CloseRequested?.Invoke(this);
-        }
-
-        protected void SetCanvasState(float alpha, bool isInteractive)
-        {
-            if (canvasGroup == null)
-            {
-                return;
-            }
-
-            canvasGroup.alpha = alpha;
-            canvasGroup.interactable = isInteractive;
-            canvasGroup.blocksRaycasts = isInteractive;
         }
         #endregion
     }
