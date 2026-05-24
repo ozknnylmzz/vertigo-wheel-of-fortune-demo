@@ -130,6 +130,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 8827839bb4541439e95a77ba33edf9e2, type: 3}
+    - target: {fileID: 1483760901124359199, guid: 75f738b0ae69e4fddb97b538020d3d89, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 563.8699
+      objectReference: {fileID: 0}
+    - target: {fileID: 1483760901124359199, guid: 75f738b0ae69e4fddb97b538020d3d89, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -12.1165
+      objectReference: {fileID: 0}
     - target: {fileID: 1570098264110056443, guid: 75f738b0ae69e4fddb97b538020d3d89, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -141,6 +149,10 @@ PrefabInstance:
     - target: {fileID: 3320949897342768502, guid: 75f738b0ae69e4fddb97b538020d3d89, type: 3}
       propertyPath: m_text
       value: x3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3905003976025900898, guid: 75f738b0ae69e4fddb97b538020d3d89, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4027465813603141383, guid: 75f738b0ae69e4fddb97b538020d3d89, type: 3}
       propertyPath: m_IsActive
@@ -600,7 +612,7 @@ PrefabInstance:
       objectReference: {fileID: 9200336567337546727}
     - target: {fileID: 4156721558187377165, guid: 74395101358544945a7f3b647d55e280, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4414948828953730493, guid: 74395101358544945a7f3b647d55e280, type: 3}
       propertyPath: m_Sprite
@@ -1363,6 +1375,34 @@ PrefabInstance:
     - target: {fileID: 1708328416810722642, guid: e0c3117ffffb64e8e89d4fb9034becbd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554618148066803168, guid: e0c3117ffffb64e8e89d4fb9034becbd, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554618148066803168, guid: e0c3117ffffb64e8e89d4fb9034becbd, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554618148066803168, guid: e0c3117ffffb64e8e89d4fb9034becbd, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554618148066803168, guid: e0c3117ffffb64e8e89d4fb9034becbd, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554618148066803168, guid: e0c3117ffffb64e8e89d4fb9034becbd, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554618148066803168, guid: e0c3117ffffb64e8e89d4fb9034becbd, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -110
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554618148066803168, guid: e0c3117ffffb64e8e89d4fb9034becbd, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -55
       objectReference: {fileID: 0}
     - target: {fileID: 7495646771294448778, guid: e0c3117ffffb64e8e89d4fb9034becbd, type: 3}
       propertyPath: rewardFlyGroupController

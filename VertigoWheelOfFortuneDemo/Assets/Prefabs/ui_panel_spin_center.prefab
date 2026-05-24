@@ -1488,7 +1488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spinCenterConfig: {fileID: 11400000, guid: 6a9b27308009942c0b58cdd41705872d, type: 2}
-  levelValue: 12
+  levelValue: 1
   spinCenterView: {fileID: 8254821914578220527}
 --- !u!114 &973262081084133606
 MonoBehaviour:

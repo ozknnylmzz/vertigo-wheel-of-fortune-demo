@@ -23,12 +23,20 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
 
         public event Action<SpinCenterTierVisualData> SpinCenterVisualApplied;
 
+        private bool isGameFlowSubscribed;
+
 #if UNITY_EDITOR
         private bool editorPreviewApplyQueued;
 #endif
 
         private void Awake()
         {
+            if (Application.isPlaying)
+            {
+                SetLevel(ResolveCurrentLevel());
+                return;
+            }
+
             ApplyCurrentSelection();
         }
 
@@ -39,21 +47,22 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
                 return;
             }
 
-            if (WheelGameFlowManager.Instance == null)
+            TrySubscribeGameFlow();
+        }
+
+        private void Start()
+        {
+            if (!Application.isPlaying)
             {
                 return;
             }
 
-            WheelGameFlowManager.Instance.LevelChanged += HandleLevelChanged;
-            HandleLevelChanged(WheelGameFlowManager.Instance.CurrentLevel);
+            TrySubscribeGameFlow();
         }
 
         private void OnDisable()
         {
-            if (Application.isPlaying && WheelGameFlowManager.Instance != null)
-            {
-                WheelGameFlowManager.Instance.LevelChanged -= HandleLevelChanged;
-            }
+            TryUnsubscribeGameFlow();
 
 #if UNITY_EDITOR
             if (editorPreviewApplyQueued)
@@ -118,6 +127,35 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         private void HandleLevelChanged(int level)
         {
             SetLevel(level);
+        }
+
+        private static int ResolveCurrentLevel()
+        {
+            return WheelGameFlowManager.Instance != null ? WheelGameFlowManager.Instance.CurrentLevel : 1;
+        }
+
+        private void TrySubscribeGameFlow()
+        {
+            if (isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
+            {
+                return;
+            }
+
+            WheelGameFlowManager.Instance.LevelChanged += HandleLevelChanged;
+            isGameFlowSubscribed = true;
+            HandleLevelChanged(WheelGameFlowManager.Instance.CurrentLevel);
+        }
+
+        private void TryUnsubscribeGameFlow()
+        {
+            if (!Application.isPlaying || !isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
+            {
+                isGameFlowSubscribed = false;
+                return;
+            }
+
+            WheelGameFlowManager.Instance.LevelChanged -= HandleLevelChanged;
+            isGameFlowSubscribed = false;
         }
 
         private static void ResolveSliceAmounts(SpinCenterTierVisualData visualData, int level)

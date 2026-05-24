@@ -14,7 +14,6 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         private const string SlotItemPrefix = "ui_item_round_slot_";
         private const float DefaultSlotSpacing = 79f;
         private const float DefaultShiftDurationSeconds = 0.25f;
-        private const float FixedSpawnX = 553 + 79f;
         #endregion
 
         #region Inspector Fields
@@ -34,7 +33,6 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         private readonly List<RoundSlotBinding> slotBindings = new List<RoundSlotBinding>();
         private Sequence shiftSequence;
         private float slotSpacing = DefaultSlotSpacing;
-        private float spawnX;
         private bool initialized;
         private bool isGameFlowSubscribed;
         private int shiftsSinceLastSpawn;
@@ -170,7 +168,6 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             spawnShiftThreshold = Mathf.Max(1, spawnShiftThreshold);
             shiftsSinceLastSpawn = 0;
             slotSpacing = ResolveSlotSpacing();
-            spawnX = FixedSpawnX;
             highlightedSlotBinding = null;
 
             int centerIndex = ResolveCenterIndex();
@@ -267,7 +264,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             int nextRoundValue = rightMostSlot.RoundValue + 1;
 
             Vector2 recycledPosition = leavingSlot.Rect.anchoredPosition;
-            recycledPosition.x = spawnX;
+            recycledPosition.x = ResolveRecycleSpawnX(rightMostSlot);
             leavingSlot.Rect.anchoredPosition = recycledPosition;
 
             leavingSlot.RoundValue = nextRoundValue;
@@ -301,6 +298,11 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             }
 
             return minSpacing < float.MaxValue ? minSpacing : DefaultSlotSpacing;
+        }
+
+        private float ResolveRecycleSpawnX(RoundSlotBinding rightMostSlot)
+        {
+            return rightMostSlot.Rect.anchoredPosition.x + slotSpacing;
         }
 
         private int ResolveCenterIndex()
