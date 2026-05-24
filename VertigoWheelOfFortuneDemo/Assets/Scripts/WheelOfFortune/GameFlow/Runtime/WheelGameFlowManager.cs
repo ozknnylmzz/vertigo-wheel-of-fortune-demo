@@ -170,6 +170,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
             IncrementRound();
             IncrementLevel();
+
             if (IsStageRewardLevel(level_value) && WheelGameEventBus.PublishStageRewardPopupRequested(level_value))
             {
                 return;
@@ -217,7 +218,8 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
 
         private void CompleteSpinResult()
         {
-            SetGameState(round_value >= MaxRoundValue ? WheelGameState.Win : WheelGameState.Idle);
+            WheelGameState nextState = round_value >= MaxRoundValue ? WheelGameState.Win : WheelGameState.Idle;
+            SetGameState(nextState);
         }
 
         private static bool IsStageRewardLevel(int level)

@@ -30,39 +30,39 @@ MonoBehaviour:
     rewardIcon: {fileID: 21300000, guid: dfa32647d25534b2c80d5974e0b882b5, type: 3}
     progressRequiredAmount: 90
   - rewardType: 10
-    rewardName: ARMOR
+    rewardName: ARMOR POINT
     rewardIcon: {fileID: 21300000, guid: 790282e6284534be9b8b7c536f223e39, type: 3}
     progressRequiredAmount: 90
   - rewardType: 10
-    rewardName: KNIFE
+    rewardName: KNIFE POINT
     rewardIcon: {fileID: 21300000, guid: 2bfb782b80b964da9816fa1522b6096d, type: 3}
     progressRequiredAmount: 90
   - rewardType: 10
-    rewardName: PISTOL
+    rewardName: PISTOL POINT
     rewardIcon: {fileID: 21300000, guid: 92a19fc0384c746499be529034888f47, type: 3}
     progressRequiredAmount: 90
   - rewardType: 10
-    rewardName: M4A1
+    rewardName: M4A1 POINT
     rewardIcon: {fileID: 21300000, guid: 59ff4e4229d504b47b4bd2bd1f3b7035, type: 3}
     progressRequiredAmount: 90
   - rewardType: 10
-    rewardName: SHOTGUN
+    rewardName: SHOTGUN POINT
     rewardIcon: {fileID: 21300000, guid: 6e43811de403342e2abe9501fafaeadd, type: 3}
     progressRequiredAmount: 90
   - rewardType: 10
-    rewardName: SMG
+    rewardName: SMG POINT
     rewardIcon: {fileID: 21300000, guid: 1e729eeecd9d14824a3f1f2fd5fc9beb, type: 3}
     progressRequiredAmount: 90
   - rewardType: 10
-    rewardName: SNIPER
+    rewardName: SNIPER POINT
     rewardIcon: {fileID: 21300000, guid: 3ff938b4776ce4509808b408b67771f1, type: 3}
     progressRequiredAmount: 90
   - rewardType: 10
-    rewardName: SUBMACHINE
+    rewardName: SUBMACHINE POINT
     rewardIcon: {fileID: 21300000, guid: 875a5a8969c8f4a649b5882a6995d08c, type: 3}
     progressRequiredAmount: 90
   - rewardType: 10
-    rewardName: VEST
+    rewardName: VEST POINT
     rewardIcon: {fileID: 21300000, guid: 06959a7c6fda74cf0874132fbdbd6777, type: 3}
     progressRequiredAmount: 90
   - rewardType: 20

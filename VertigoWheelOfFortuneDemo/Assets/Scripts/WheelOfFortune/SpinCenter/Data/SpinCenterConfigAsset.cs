@@ -24,6 +24,8 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
         [SerializeField] private SpinCenterTierVisualData silver = new SpinCenterTierVisualData();
         [SerializeField] private SpinCenterTierVisualData golden = new SpinCenterTierVisualData();
 
+        public WheelRewardPoolAsset RewardPool => rewardPool;
+
         private void OnValidate()
         {
             EnsureTierContainers();

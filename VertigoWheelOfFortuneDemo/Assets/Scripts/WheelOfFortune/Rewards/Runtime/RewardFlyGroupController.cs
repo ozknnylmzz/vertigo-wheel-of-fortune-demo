@@ -49,12 +49,32 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             Action<int> rewardStepCompleted,
             Action rewardAnimationCompleted = null)
         {
+            Play(
+                rewardIcon,
+                startPoint,
+                targetPoint,
+                rewardAmount,
+                rewardStepCompleted,
+                1f,
+                rewardAnimationCompleted);
+        }
+
+        public void Play(
+            Sprite rewardIcon,
+            RectTransform startPoint,
+            RectTransform targetPoint,
+            int rewardAmount,
+            Action<int> rewardStepCompleted,
+            float animationTimeScale,
+            Action rewardAnimationCompleted = null)
+        {
             requests.Enqueue(new RewardFlyRequest(
                 rewardIcon,
                 startPoint,
                 targetPoint,
                 rewardAmount,
                 rewardStepCompleted,
+                animationTimeScale,
                 rewardAnimationCompleted));
 
             if (activeSequence == null || !activeSequence.IsActive())
@@ -97,6 +117,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             Vector3 targetPosition = request.TargetPoint.position;
 
             activeSequence = DOTween.Sequence().SetTarget(this);
+            activeSequence.timeScale = request.AnimationTimeScale;
             for (int i = 0; i < flyIcons.Length; i++)
             {
                 Image icon = flyIcons[i];
@@ -206,6 +227,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 RectTransform targetPoint,
                 int amount,
                 Action<int> stepCompleted,
+                float animationTimeScale,
                 Action animationCompleted)
             {
                 Icon = icon;
@@ -213,6 +235,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
                 TargetPoint = targetPoint;
                 Amount = amount;
                 StepCompleted = stepCompleted;
+                AnimationTimeScale = Mathf.Max(1f, animationTimeScale);
                 AnimationCompleted = animationCompleted;
             }
 
@@ -221,6 +244,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             public RectTransform TargetPoint { get; }
             public int Amount { get; }
             public Action<int> StepCompleted { get; }
+            public float AnimationTimeScale { get; }
             public Action AnimationCompleted { get; }
         }
         #endregion

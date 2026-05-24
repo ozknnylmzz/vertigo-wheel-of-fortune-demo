@@ -57,6 +57,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
                 return;
             }
 
+            string rewardAmountValue = ResolveRewardAmountValue(rewardData);
             if (rewardData.rewardType == WheelRewardType.Bomb)
             {
                 WheelGameFlowManager.Instance?.HitBomb();
@@ -66,7 +67,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             bool rewardHandled = WheelGameEventBus.PublishRewardWon(new WheelRewardData(
                 rewardData.rewardType,
                 rewardData.rewardIcon,
-                ResolveRewardAmountValue(rewardData)));
+                rewardAmountValue));
 
             if (!rewardHandled)
             {

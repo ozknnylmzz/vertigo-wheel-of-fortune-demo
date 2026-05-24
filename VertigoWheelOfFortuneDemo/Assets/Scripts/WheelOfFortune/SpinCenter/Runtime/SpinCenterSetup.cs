@@ -104,6 +104,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             SpinCenterTierVisualData visualData = spinCenterConfig.GenerateSlicesForLevel(levelValue, spinCenterView.SliceViewCount);
             ResolveSliceAmounts(visualData, levelValue);
             spinCenterView.gameObject.SetActive(true);
+            spinCenterView.SetRewardPool(spinCenterConfig.RewardPool);
             spinCenterView.ApplyVisualData(visualData);
             SpinCenterVisualApplied?.Invoke(visualData);
         }

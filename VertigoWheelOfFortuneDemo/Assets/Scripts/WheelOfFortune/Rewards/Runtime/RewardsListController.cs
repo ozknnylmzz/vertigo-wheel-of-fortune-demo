@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
@@ -15,10 +16,15 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
         [SerializeField] private RewardListItemView rewardItemPrefab;
         [SerializeField] private RectTransform rewardAnimationStartPoint;
         [SerializeField] private RewardFlyGroupController rewardFlyGroupController;
+        [SerializeField] [Min(0.5f)] private float rewardCompletionFallbackSeconds = 3f;
         #endregion
 
         #region Runtime State
         private readonly Dictionary<string, RewardItemState> rewardItems = new Dictionary<string, RewardItemState>();
+        private Coroutine rewardCompletionFallbackCoroutine;
+        private int rewardCompletionToken;
+        private bool rewardCompletionPending;
+        private float spinFastForwardMultiplier = 1f;
         #endregion
 
         #region Unity Lifecycle
@@ -38,6 +44,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             }
 
             WheelGameEventBus.RewardWon += HandleRewardWon;
+            WheelGameEventBus.SpinFastForwardMultiplierChanged += HandleSpinFastForwardMultiplierChanged;
             WheelGameEventBus.RewardsResetRequested += ResetRewards;
         }
 
@@ -49,6 +56,7 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             }
 
             WheelGameEventBus.RewardWon -= HandleRewardWon;
+            WheelGameEventBus.SpinFastForwardMultiplierChanged -= HandleSpinFastForwardMultiplierChanged;
             WheelGameEventBus.RewardsResetRequested -= ResetRewards;
         }
         #endregion
@@ -70,20 +78,27 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
 
             int rewardAmount = WheelRewardAmountValueUtility.ParseAmount(rewardData.rewardAmountValue);
             RewardItemState itemState = PrepareRewardItem(rewardData);
-            if (rewardFlyGroupController != null && rewardAnimationStartPoint != null)
+            if (CanPlayRewardFlyAnimation())
             {
+                int completionToken = BeginRewardCompletionWait();
                 rewardFlyGroupController.Play(
                     rewardData.rewardIcon,
                     rewardAnimationStartPoint,
                     itemState.ItemView.RectTransform,
                     rewardAmount,
                     amountStep => AddRewardAmount(itemState, amountStep),
-                    CompleteRewardCollection);
+                    ResolveRewardFlyTimeScale(),
+                    () => CompleteRewardCollectionIfPending(completionToken));
                 return;
             }
 
             AddRewardAmount(itemState, rewardAmount);
             CompleteRewardCollection();
+        }
+
+        private void HandleSpinFastForwardMultiplierChanged(float multiplier)
+        {
+            spinFastForwardMultiplier = Mathf.Max(1f, multiplier);
         }
         #endregion
 
@@ -111,6 +126,13 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             Canvas.ForceUpdateCanvases();
 
             return itemState;
+        }
+
+        private bool CanPlayRewardFlyAnimation()
+        {
+            return rewardFlyGroupController != null
+                   && rewardFlyGroupController.isActiveAndEnabled
+                   && rewardAnimationStartPoint != null;
         }
 
         private void AddRewardAmount(RewardItemState itemState, int amount)
@@ -174,8 +196,51 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
             WheelGameFlowManager.Instance?.CompleteRewardCollection();
         }
 
+        private int BeginRewardCompletionWait()
+        {
+            rewardCompletionToken++;
+            rewardCompletionPending = true;
+
+            if (rewardCompletionFallbackCoroutine != null)
+            {
+                StopCoroutine(rewardCompletionFallbackCoroutine);
+            }
+
+            rewardCompletionFallbackCoroutine = StartCoroutine(CompleteRewardCollectionFallback(rewardCompletionToken));
+            return rewardCompletionToken;
+        }
+
+        private float ResolveRewardFlyTimeScale()
+        {
+            return spinFastForwardMultiplier;
+        }
+
+        private IEnumerator CompleteRewardCollectionFallback(int completionToken)
+        {
+            yield return new WaitForSeconds(Mathf.Max(0.5f, rewardCompletionFallbackSeconds));
+            CompleteRewardCollectionIfPending(completionToken);
+        }
+
+        private void CompleteRewardCollectionIfPending(int completionToken)
+        {
+            if (!rewardCompletionPending || completionToken != rewardCompletionToken)
+            {
+                return;
+            }
+
+            rewardCompletionPending = false;
+            if (rewardCompletionFallbackCoroutine != null)
+            {
+                StopCoroutine(rewardCompletionFallbackCoroutine);
+                rewardCompletionFallbackCoroutine = null;
+            }
+
+            CompleteRewardCollection();
+        }
+
         private void ResetRewards()
         {
+            spinFastForwardMultiplier = 1f;
             foreach (RewardItemState itemState in rewardItems.Values)
             {
                 if (itemState.ItemView != null)

@@ -57,6 +57,12 @@ namespace Vertigo.WheelOfFortune.Rewards.Runtime
 
         private void HandleExitButtonClicked()
         {
+            if (WheelGameFlowManager.Instance != null &&
+                WheelGameFlowManager.Instance.CurrentState == WheelGameState.Spinning)
+            {
+                return;
+            }
+
             if (WheelGameFlowManager.Instance != null && WheelGameFlowManager.Instance.CurrentLevel <= 1)
             {
                 WheelGameEventBus.PublishExitGameConfirmRequested();

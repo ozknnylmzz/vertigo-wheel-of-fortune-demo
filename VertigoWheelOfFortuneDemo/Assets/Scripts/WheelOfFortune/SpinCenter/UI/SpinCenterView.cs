@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Vertigo.WheelOfFortune.GameFlow.Runtime;
+using Vertigo.WheelOfFortune.Rewards.Data;
+using Vertigo.WheelOfFortune.Rewards.Runtime;
 using Vertigo.WheelOfFortune.SpinCenter.Data;
 
 namespace Vertigo.WheelOfFortune.SpinCenter.UI
@@ -15,8 +17,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
         private const string TitleValueName = "ui_text_spin_title_value";
         private const string RewardInfoValueName = "ui_text_spin_rewards_info_value";
         private const string SliceContainerName = "ui_container_wheel_slices";
-        private const string RewardInfoPrefix = "Up To ";
-        private const string RewardInfoSuffix = " Rewards";
+        private const string RewardWonPrefix = "Winning: ";
 
         [Header("Main UI References")]
         [SerializeField] private Image ui_image_spin_base;
@@ -24,16 +25,59 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
         [SerializeField] private TMP_Text ui_text_spin_title_value;
         [SerializeField] private TMP_Text ui_text_spin_rewards_info_value;
         [SerializeField] private Transform ui_container_wheel_slices;
+        [SerializeField] private WheelRewardPoolAsset rewardPool;
 
         [Header("Slice Views")]
         [SerializeField] private List<SpinCenterSliceView> ui_wheel_slice_views = new List<SpinCenterSliceView>();
 
+        private Color defaultRewardInfoColor = Color.white;
+        private bool isGameFlowSubscribed;
+
         public int SliceViewCount => ui_wheel_slice_views.Count;
+
+        private void OnEnable()
+        {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
+            WheelGameEventBus.RewardWonObserved += HandleRewardWonObserved;
+            WheelGameEventBus.RewardsResetRequested += HandleRewardsResetRequested;
+            TrySubscribeGameFlow();
+        }
+
+        private void Start()
+        {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
+            TrySubscribeGameFlow();
+        }
+
+        private void OnDisable()
+        {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
+            WheelGameEventBus.RewardWonObserved -= HandleRewardWonObserved;
+            WheelGameEventBus.RewardsResetRequested -= HandleRewardsResetRequested;
+            TryUnsubscribeGameFlow();
+        }
 
         private void OnValidate()
         {
             AutoAssignMainReferences();
             CollectSliceViews();
+        }
+
+        public void SetRewardPool(WheelRewardPoolAsset pool)
+        {
+            rewardPool = pool;
         }
 
         public void ApplyVisualData(SpinCenterTierVisualData visualData)
@@ -63,8 +107,8 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
 
             if (ui_text_spin_rewards_info_value != null)
             {
-                ui_text_spin_rewards_info_value.text = FormatRewardInfoText(visualData.rewardInfoAmountValue);
-                ui_text_spin_rewards_info_value.color = visualData.rewardInfoColor;
+                defaultRewardInfoColor = visualData.rewardInfoColor;
+                ClearRewardWonInfo();
             }
 
             int viewCount = ui_wheel_slice_views.Count;
@@ -79,6 +123,31 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
             for (int i = minCount; i < viewCount; i++)
             {
                 ui_wheel_slice_views[i].ApplyVisualData(null);
+            }
+        }
+
+        private void HandleRewardWonObserved(WheelRewardData rewardData)
+        {
+            if (rewardData.rewardType == WheelRewardType.None || rewardData.rewardType == WheelRewardType.Bomb)
+            {
+                return;
+            }
+
+            string rewardName = ResolveRewardName(rewardData);
+            string amountValue = rewardData.rewardAmountValue;
+            ApplyRewardInfoText(FormatRewardWonText(rewardName, amountValue));
+        }
+
+        private void HandleRewardsResetRequested()
+        {
+            ClearRewardWonInfo();
+        }
+
+        private void HandleGameStateChanged(WheelGameState state)
+        {
+            if (state == WheelGameState.Spinning)
+            {
+                ClearRewardWonInfo();
             }
         }
 
@@ -184,33 +253,62 @@ namespace Vertigo.WheelOfFortune.SpinCenter.UI
             return null;
         }
 
-        private static string FormatRewardInfoText(string rawAmountValue)
+        private void TrySubscribeGameFlow()
         {
-            string amountValue = ExtractRewardInfoAmount(rawAmountValue);
-            return string.IsNullOrWhiteSpace(amountValue)
-                ? string.Empty
-                : string.Concat(RewardInfoPrefix, amountValue, RewardInfoSuffix);
+            if (isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
+            {
+                return;
+            }
+
+            WheelGameFlowManager.Instance.GameStateChanged += HandleGameStateChanged;
+            isGameFlowSubscribed = true;
         }
 
-        private static string ExtractRewardInfoAmount(string rawAmountValue)
+        private void TryUnsubscribeGameFlow()
         {
-            if (string.IsNullOrWhiteSpace(rawAmountValue))
+            if (!isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
             {
-                return string.Empty;
+                isGameFlowSubscribed = false;
+                return;
             }
 
-            string value = rawAmountValue.Trim();
-            bool hasPrefix = value.StartsWith(RewardInfoPrefix, StringComparison.OrdinalIgnoreCase);
-            bool hasSuffix = value.EndsWith(RewardInfoSuffix, StringComparison.OrdinalIgnoreCase);
+            WheelGameFlowManager.Instance.GameStateChanged -= HandleGameStateChanged;
+            isGameFlowSubscribed = false;
+        }
 
-            if (!hasPrefix || !hasSuffix || value.Length <= RewardInfoPrefix.Length + RewardInfoSuffix.Length)
+        private void ClearRewardWonInfo()
+        {
+            ApplyRewardInfoText(string.Empty, false);
+        }
+
+        private void ApplyRewardInfoText(string text, bool isVisible = true)
+        {
+            if (ui_text_spin_rewards_info_value == null)
             {
-                return value;
+                return;
             }
 
-            int start = RewardInfoPrefix.Length;
-            int length = value.Length - RewardInfoPrefix.Length - RewardInfoSuffix.Length;
-            return value.Substring(start, length).Trim();
+            ui_text_spin_rewards_info_value.text = text;
+            ui_text_spin_rewards_info_value.color = defaultRewardInfoColor;
+            ui_text_spin_rewards_info_value.gameObject.SetActive(isVisible && !string.IsNullOrWhiteSpace(text));
+        }
+
+        private string ResolveRewardName(WheelRewardData rewardData)
+        {
+            string fallbackName = rewardData.rewardType.ToString();
+            return rewardPool != null
+                ? rewardPool.ResolveName(rewardData.rewardType, rewardData.rewardIcon, fallbackName)
+                : fallbackName;
+        }
+
+        private static string FormatRewardWonText(string rewardName, string amountValue)
+        {
+            if (string.IsNullOrWhiteSpace(amountValue))
+            {
+                return RewardWonPrefix + rewardName;
+            }
+
+            return RewardWonPrefix + rewardName + " " + amountValue;
         }
     }
 }

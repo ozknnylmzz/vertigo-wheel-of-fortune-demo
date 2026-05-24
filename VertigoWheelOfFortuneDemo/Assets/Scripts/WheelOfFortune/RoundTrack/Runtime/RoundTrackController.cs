@@ -36,6 +36,7 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         private float slotSpacing = DefaultSlotSpacing;
         private float spawnX;
         private bool initialized;
+        private bool isGameFlowSubscribed;
         private int shiftsSinceLastSpawn;
         private int currentRoundValue = 1;
         private RoundSlotBinding highlightedSlotBinding;
@@ -54,20 +55,22 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
             }
 
             InitializeTrack(ResolveCurrentRound());
-            if (WheelGameFlowManager.Instance != null)
+            TrySubscribeGameFlow();
+        }
+
+        private void Start()
+        {
+            if (!Application.isPlaying)
             {
-                WheelGameFlowManager.Instance.RoundChanged += HandleRoundChanged;
-                WheelGameFlowManager.Instance.LevelChanged += HandleLevelChanged;
+                return;
             }
+
+            TrySubscribeGameFlow();
         }
 
         private void OnDisable()
         {
-            if (Application.isPlaying && WheelGameFlowManager.Instance != null)
-            {
-                WheelGameFlowManager.Instance.RoundChanged -= HandleRoundChanged;
-                WheelGameFlowManager.Instance.LevelChanged -= HandleLevelChanged;
-            }
+            TryUnsubscribeGameFlow();
 
             if (shiftSequence != null)
             {
@@ -208,7 +211,17 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         #region Shift Flow
         private void ShiftLeftOnce()
         {
-            if (!initialized || slotBindings.Count < 2 || IsShifting)
+            if (!initialized)
+            {
+                return;
+            }
+
+            if (slotBindings.Count < 2)
+            {
+                return;
+            }
+
+            if (IsShifting)
             {
                 return;
             }
@@ -440,6 +453,33 @@ namespace Vertigo.WheelOfFortune.RoundTrack.Runtime
         private static int ResolveCurrentLevel()
         {
             return WheelGameFlowManager.Instance != null ? WheelGameFlowManager.Instance.CurrentLevel : 1;
+        }
+
+        private void TrySubscribeGameFlow()
+        {
+            if (isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
+            {
+                return;
+            }
+
+            WheelGameFlowManager.Instance.RoundChanged += HandleRoundChanged;
+            WheelGameFlowManager.Instance.LevelChanged += HandleLevelChanged;
+            isGameFlowSubscribed = true;
+
+            InitializeTrack(WheelGameFlowManager.Instance.CurrentRound);
+        }
+
+        private void TryUnsubscribeGameFlow()
+        {
+            if (!Application.isPlaying || !isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
+            {
+                isGameFlowSubscribed = false;
+                return;
+            }
+
+            WheelGameFlowManager.Instance.RoundChanged -= HandleRoundChanged;
+            WheelGameFlowManager.Instance.LevelChanged -= HandleLevelChanged;
+            isGameFlowSubscribed = false;
         }
         #endregion
 

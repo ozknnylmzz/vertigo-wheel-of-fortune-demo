@@ -7,6 +7,7 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
     {
         #region Events
         public static event Action<float> SpinCompleted;
+        public static event Action<float> SpinFastForwardMultiplierChanged;
         public static event Action<WheelRewardData> RewardWon;
         public static event Action<WheelRewardData> RewardWonObserved;
         public static event Action RewardsResetRequested;
@@ -19,6 +20,11 @@ namespace Vertigo.WheelOfFortune.GameFlow.Runtime
         public static void PublishSpinCompleted(float stopAngle)
         {
             SpinCompleted?.Invoke(stopAngle);
+        }
+
+        public static void PublishSpinFastForwardMultiplierChanged(float multiplier)
+        {
+            SpinFastForwardMultiplierChanged?.Invoke(multiplier);
         }
 
         public static bool PublishRewardWon(WheelRewardData rewardData)

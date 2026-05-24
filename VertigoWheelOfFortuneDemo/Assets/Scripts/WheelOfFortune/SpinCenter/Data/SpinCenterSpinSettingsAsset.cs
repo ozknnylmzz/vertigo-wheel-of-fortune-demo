@@ -18,6 +18,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
 
         [Header("Behavior")]
         [SerializeField] private bool blockButtonDuringSpin = true;
+        [SerializeField] [Min(1f)] private float fastForwardMultiplier = 3f;
         [SerializeField] private AnimationCurve spinEaseCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
         public float SpinDurationSeconds => spinDurationSeconds;
@@ -28,6 +29,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
         public bool SnapToSliceCenter => snapToSliceCenter;
         public int SliceCount => sliceCount;
         public bool BlockButtonDuringSpin => blockButtonDuringSpin;
+        public float FastForwardMultiplier => Mathf.Max(1f, fastForwardMultiplier);
         public AnimationCurve SpinEaseCurve => spinEaseCurve;
 
         private void OnValidate()
@@ -38,6 +40,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Data
             minExtraStopAngle = Mathf.Clamp(minExtraStopAngle, 0f, 360f);
             maxExtraStopAngle = Mathf.Clamp(maxExtraStopAngle, minExtraStopAngle, 360f);
             sliceCount = Mathf.Max(2, sliceCount);
+            fastForwardMultiplier = Mathf.Max(1f, fastForwardMultiplier);
 
             if (spinEaseCurve == null || spinEaseCurve.length == 0)
             {

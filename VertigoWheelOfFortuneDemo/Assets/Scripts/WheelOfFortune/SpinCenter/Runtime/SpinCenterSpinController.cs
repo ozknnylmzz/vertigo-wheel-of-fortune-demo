@@ -25,6 +25,9 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         public event Action<float> SpinCompleted;
 
         private Sequence spinSequence;
+        private bool isGameFlowSubscribed;
+        private bool spinFastForwarded;
+        private int spinStartedFrame;
 
         private void Awake()
         {
@@ -34,24 +37,32 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         private void OnEnable()
         {
             SubscribeButton();
-            if (WheelGameFlowManager.Instance != null)
-            {
-                WheelGameFlowManager.Instance.GameStateChanged += HandleGameStateChanged;
-            }
+            TrySubscribeGameFlow();
+            SetButtonInteractable(CanStartSpin());
+        }
 
+        private void Start()
+        {
+            TrySubscribeGameFlow();
             SetButtonInteractable(CanStartSpin());
         }
 
         private void OnDisable()
         {
-            if (WheelGameFlowManager.Instance != null)
-            {
-                WheelGameFlowManager.Instance.GameStateChanged -= HandleGameStateChanged;
-            }
-
+            TryUnsubscribeGameFlow();
             UnsubscribeButton();
             StopSpinIfRunning();
             SetButtonInteractable(true);
+        }
+
+        private void Update()
+        {
+            if (!CanFastForwardSpin() || !HasScreenClickStarted())
+            {
+                return;
+            }
+
+            FastForwardSpin();
         }
 
         private void OnValidate()
@@ -79,8 +90,11 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         private void StartSpinSequence()
         {
             IsSpinning = true;
+            spinFastForwarded = false;
+            spinStartedFrame = Time.frameCount;
             SetButtonInteractable(false);
             SpinStarted?.Invoke();
+            WheelGameEventBus.PublishSpinFastForwardMultiplierChanged(1f);
             WheelGameFlowManager.Instance.BeginSpin();
 
             int turns = UnityEngine.Random.Range(GetMinSpinTurns(), GetMaxSpinTurns() + 1);
@@ -151,6 +165,29 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             SetButtonInteractable(CanStartSpin());
         }
 
+        private void TrySubscribeGameFlow()
+        {
+            if (isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
+            {
+                return;
+            }
+
+            WheelGameFlowManager.Instance.GameStateChanged += HandleGameStateChanged;
+            isGameFlowSubscribed = true;
+        }
+
+        private void TryUnsubscribeGameFlow()
+        {
+            if (!isGameFlowSubscribed || WheelGameFlowManager.Instance == null)
+            {
+                isGameFlowSubscribed = false;
+                return;
+            }
+
+            WheelGameFlowManager.Instance.GameStateChanged -= HandleGameStateChanged;
+            isGameFlowSubscribed = false;
+        }
+
         private void StopSpinIfRunning()
         {
             if (spinSequence == null || !spinSequence.IsActive())
@@ -193,6 +230,7 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
         {
             spinSequence = null;
             IsSpinning = false;
+            spinFastForwarded = false;
             SetButtonInteractable(CanStartSpin());
         }
 
@@ -247,6 +285,11 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             return spinSettings == null || spinSettings.SnapToSliceCenter;
         }
 
+        private float GetFastForwardMultiplier()
+        {
+            return spinSettings != null ? spinSettings.FastForwardMultiplier : 3f;
+        }
+
         private int GetSliceCount()
         {
             return spinSettings != null ? Mathf.Max(2, spinSettings.SliceCount) : 8;
@@ -260,6 +303,42 @@ namespace Vertigo.WheelOfFortune.SpinCenter.Runtime
             }
 
             return DefaultEaseCurve;
+        }
+
+        private bool CanFastForwardSpin()
+        {
+            return IsSpinning &&
+                   !spinFastForwarded &&
+                   Time.frameCount != spinStartedFrame &&
+                   spinSequence != null &&
+                   spinSequence.IsActive();
+        }
+
+        private void FastForwardSpin()
+        {
+            spinFastForwarded = true;
+            float fastForwardMultiplier = GetFastForwardMultiplier();
+            WheelGameEventBus.PublishSpinFastForwardMultiplierChanged(fastForwardMultiplier);
+
+            spinSequence.timeScale = fastForwardMultiplier;
+        }
+
+        private static bool HasScreenClickStarted()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                return true;
+            }
+
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                if (Input.GetTouch(i).phase == TouchPhase.Began)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static float SnapAngleToSliceCenter(float angle, int sliceCount)

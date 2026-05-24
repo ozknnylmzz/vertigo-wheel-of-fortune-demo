@@ -257,9 +257,20 @@ namespace Vertigo.WheelOfFortune.Popups.Runtime
             }
         }
 
-        private void HandlePopupCloseRequested(WheelPopupBase _)
+        private void HandlePopupCloseRequested(WheelPopupBase popup)
         {
+            if (popup != null && popup.PopupType == WheelPopupType.WinResult)
+            {
+                ResetGameAfterWinResult();
+            }
+
             HideAll();
+        }
+
+        private static void ResetGameAfterWinResult()
+        {
+            WheelGameEventBus.PublishRewardsResetRequested();
+            WheelGameFlowManager.Instance?.RestartGame();
         }
 
         private void TrySubscribeGameFlow()
